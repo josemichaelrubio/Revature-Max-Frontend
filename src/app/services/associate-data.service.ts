@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { EmployeeInfo } from '../models/employee-info';
 import { User } from '../models/user';
 import { environment } from '../../environments/environment';
+import { UserProfile } from 'app/models/user-profile';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ export class AssociateDataService {
   associateId : number = JSON.parse(sessionStorage.getItem("user") || "").id;
 
   associatesUrl: string = environment.baseUrl+`/employees/${this.associateId}`;
+  employeeTestUrl: string = "http://localhost:8082/employees";
 
   httpOptions = {
     headers: new HttpHeaders({"Authorization": this.token})
@@ -39,6 +41,10 @@ export class AssociateDataService {
        () => console.log()
 
       );
+  }
+
+  getEmployeeProfile(): Observable<UserProfile>{
+    return this.http.get<UserProfile>(this.employeeTestUrl+`/1`);
   }
 
 }

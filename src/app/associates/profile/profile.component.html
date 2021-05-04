@@ -1,0 +1,104 @@
+<a class="btn btn-outline-light btn-lg" data-toggle="modal" data-target="#profileModalCenter" style="color: white;">Edit Profile</a>
+<br><br><br><br>
+<div class="container">
+    <div class="main-body">
+    
+          <div class="row gutters-sm">
+            <div class="col-md-4 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex flex-column align-items-center text-center">
+                    <img src={{userProfile.pictureUrl}} alt="Associate Image" class="rounded-circle" width="150">
+                    <span class="fa fa-camera"></span>
+                    <div class="mt-3">
+                      <h4>{{userProfile.name}}</h4>
+                      <p class="text-secondary mb-1">Revature {{userProfile.role | lowercase}}</p>
+                        <br>
+                      <br>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Full Name</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        {{userProfile.name}}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Email</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        {{userProfile.email}}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Phone Number</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        {{userProfile.phoneNumber}}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Current Batch</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        210301-java-azure
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Address</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        {{userProfile.address}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+</div>
+
+        <!-- Modal -->
+        <div  class="modal fade" id="profileModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Update Profile</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              </div>
+              <div class="modal-body">
+              <div class="form-group">
+                  <label class="control-label">Update Picture URL</label>
+                  <div>
+                    <input type="text" class="form-control" id="nameInput" name="name" placeholder="Full Name" value="{{userProfile.name}}" >
+                    <input type="text" class="form-control" id="emailInput" name="email" placeholder="@revature.net" value="{{userProfile.email}}" >
+                    <input type="text" class="form-control" id="phoneInput" name="phoneNumber" placeholder="(XXX)XXX-XXX" value="{{userProfile.phoneNumber}}" >
+                    <input type="text" class="form-control" id="addressInput" name="address" placeholder="Address" value="{{userProfile.address}}" >
+                    <input type="text" class="form-control" id="pictureInput" name="picture" placeholder="pictureUrl" value="{{userProfile.pictureUrl}}" >  
+                  </div>
+              </div>
+              <div class="modal-footer">
+              <button type="button" class="btn btn-primary" click="updateProfile()">Save changes</button>
+              </div>
+          </div>
+          </div>
+          </div>
+      </div>
