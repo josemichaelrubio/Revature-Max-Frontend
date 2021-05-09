@@ -13,3 +13,7 @@ header,
 	background-size: cover;
 
 }
+
+ul {
+	list-style: none;
+}
