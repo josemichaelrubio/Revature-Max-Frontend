@@ -38,12 +38,19 @@ export class CurriculumComponent implements OnInit {
               });
             }
           }
-          console.log(curDay);////TESTING LOG
+          console.log(curDay); ////TESTING LOG
           // add quiz / qc
           if (curDay.quiz) {
             this.events.push({
               id: `${curDay.quiz.id}`,
               title: curDay.quiz.name,
+              date: curDay.date,
+            });
+          }
+          if (curDay.qc) {
+            this.events.push({
+              id: `${curDay.qc.id}`,
+              title: curDay.qc.name,
               date: curDay.date,
             });
           }
