@@ -35,6 +35,7 @@ export class CurriculumComponent implements OnInit {
   topicDateClick!: string;
   topicTagId!: string;
   quizList: Quiz[] = [];
+  daysToUpdate: Set<BatchDay> = new Set();
 
   events = [{ id: '0', title: 'Start Date', date: '2021-03-01', tech: '0' }];
 
@@ -76,8 +77,6 @@ export class CurriculumComponent implements OnInit {
               tech: 'QC',
             });
           }
-          console.log("day: ")
-          console.log(curDay)
         }
         this.calendarOptions.events = this.events;
       },
@@ -108,7 +107,6 @@ export class CurriculumComponent implements OnInit {
     });
   }
   handleDateClick(arg: any) {
-    // alert('date click! ' + arg.dateStr)
     this.day = arg.dateStr;
   }
 
@@ -135,9 +133,9 @@ export class CurriculumComponent implements OnInit {
   }
 
   loadTopics(val: any) {
-    this.topicList = this.fullTopicList.filter(
-      (topic) => topic.tech.id == val.value
-    );
+    this.topicService
+      .getTopicsForTech(val.value)
+      .subscribe((data) => (this.topicList = data));
   }
 
   loadQuizzes() {
@@ -151,6 +149,7 @@ export class CurriculumComponent implements OnInit {
       });
       console.log('Updated quiz list');
     }
+    // Once /quizzes accepts no params, can make call here
   }
 
   /**
@@ -209,10 +208,6 @@ export class CurriculumComponent implements OnInit {
       destDay?.topics.push(movedTopic);
     }
 
-    console.log(initDay);
-
-    console.log(destDay);
-
     // change this.events date
     const movedEvent = this.events.find(
       (event) => event.title == arg.event._def.title
@@ -227,8 +222,9 @@ export class CurriculumComponent implements OnInit {
 
     console.log('(eventdrop) List of events: ', this.events);
 
-    // TODO: Mark what days are updated so when we save changes it keeps the number of requests to a minimum
-    // Can add this when getting backend requets set up
+    // Mark what days are updated so when we save changes it keeps the number of requests to a minimum
+    if (!this.daysToUpdate.has(initDay)) this.daysToUpdate.add(initDay);
+    if (!this.daysToUpdate.has(destDay)) this.daysToUpdate.add(destDay);
   }
 
   loadTechs() {
@@ -287,6 +283,9 @@ export class CurriculumComponent implements OnInit {
 
     // console.log('(addTopic) destDay ', destDay);
     // console.log('(addTopic) events ', this.events);
+
+    // add day to update set
+    if (!this.daysToUpdate.has(destDay)) this.daysToUpdate.add(destDay);
   }
 
   addQuiz(arg: any) {
@@ -342,6 +341,8 @@ export class CurriculumComponent implements OnInit {
     this.calendarOptions.events = newEvents;
 
     // console.log('(addQuiz) ', batchDay);
+    // add day to update set
+    if (!this.daysToUpdate.has(batchDay)) this.daysToUpdate.add(batchDay);
   }
 
   saveTopic(topic: any) {
@@ -386,5 +387,18 @@ export class CurriculumComponent implements OnInit {
     console.log('(remove) curDay events: ', curDay);
     console.log('(remove) curriculum after removing: ', this.batchDays);
     console.log('(remove) events: ', this.events);
+
+    // add day to update set
+    if (curDay && !this.daysToUpdate.has(curDay)) this.daysToUpdate.add(curDay);
+  }
+
+  updateBackend() {
+    console.log(this.daysToUpdate);
+    for (const day of this.daysToUpdate) {
+      console.log('updating day ', day);
+      this.curriculumService
+        .setBatchDay(day)
+        .subscribe((val) => console.log('setBatchDay callback', val));
+    }
   }
 }

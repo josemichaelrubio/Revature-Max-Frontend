@@ -22,6 +22,13 @@
     data-target="#removeModalCenter"
     >Remove Topic Event</a
   >
+  <br />
+  <br />
+  <div *ngIf="daysToUpdate.size != 0">
+    <a class="btn btn-lg btn-outline-danger" (click)="updateBackend()"
+      >Save Changes</a
+    >
+  </div>
   <br /><br />
   <full-calendar id="calendar" [options]="calendarOptions"></full-calendar>
   <br /><br />
