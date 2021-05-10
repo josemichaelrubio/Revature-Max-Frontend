@@ -42,4 +42,11 @@ export class CurriculumService {
       this.httpOptions
     );
   }
+
+  getAllQCs() {
+    return this.http.get<any>(
+      environment.baseUrl + 'curriculum/qcs',
+      this.httpOptions
+    );
+  }
 }

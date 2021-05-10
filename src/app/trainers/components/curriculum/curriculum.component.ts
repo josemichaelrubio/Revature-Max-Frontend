@@ -19,23 +19,26 @@ import { QC } from 'app/models/qc';
   styleUrls: ['./curriculum.component.css'],
 })
 export class CurriculumComponent implements OnInit {
+  batchDays: BatchDay[] = [];
+  techList: Tech[] = [];
+  topicList: Topic[] = [];
+  quizList: Quiz[] = [];
+  qcList: QC[] = [];
+  daysToUpdate: Set<BatchDay> = new Set();
+
   showDayModal: boolean = false;
   showEditButton: boolean = false;
-  batchDays: BatchDay[] = [];
+
   formData!: FormGroup;
   formRemoveData!: FormGroup;
   day!: string;
   topicTitle!: string;
-  techList: Tech[] = [];
-  fullTopicList: Topic[] = [];
-  topicList: Topic[] = [];
   tagIdBind!: string;
   topicNameClick!: string;
   topicIdClick!: string;
   topicDateClick!: string;
   topicTagId!: string;
-  quizList: Quiz[] = [];
-  daysToUpdate: Set<BatchDay> = new Set();
+  typeOfAddition!: string;
 
   events = [{ id: '0', title: 'Start Date', date: '2021-03-01', tech: '0' }];
 
@@ -93,10 +96,6 @@ export class CurriculumComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.topicService
-      .getAllTopics()
-      .subscribe((data) => (this.fullTopicList = data));
-
     this.formData = new FormGroup({
       topicName: new FormControl('Topic'),
       techId: new FormControl(0),
@@ -140,10 +139,27 @@ export class CurriculumComponent implements OnInit {
       .subscribe((data) => (this.topicList = data));
   }
 
+  loadDataForAdditions(val: any) {
+    const type = val.value;
+    if (type == 'Topic') this.loadTechs();
+    else if (type == 'Quiz') this.loadQuizzes();
+    else if (type == 'QC') this.loadQC();
+  }
+
+  loadTechs() {
+    this.topicService.getAllTags().subscribe((data) => (this.techList = data));
+  }
+
   loadQuizzes() {
     this.curriculumService
       .getAllQuizzes()
       .subscribe((data) => (this.quizList = data));
+  }
+
+  loadQC() {
+    this.curriculumService
+      .getAllQCs()
+      .subscribe((data) => (this.qcList = data));
   }
 
   /**
@@ -188,7 +204,7 @@ export class CurriculumComponent implements OnInit {
     if (arg.event._def.extendedProps.tech == 'quiz') {
       if (destDay.quiz) {
         console.log('Day already has a quiz, exiting');
-        // revert the event? so the calendar view stays synced with array
+        arg.revert();
         return;
       }
       const movedQuiz: Quiz = initDay?.quiz;
@@ -197,6 +213,7 @@ export class CurriculumComponent implements OnInit {
     } else if (arg.event._def.extendedProps.tech == 'QC') {
       if (destDay.qc) {
         console.log('Day already has a qc, exiting');
+        arg.revert();
         return;
       }
       const movedQuiz: QC = initDay?.qc;
@@ -234,10 +251,6 @@ export class CurriculumComponent implements OnInit {
     if (!this.daysToUpdate.has(destDay)) this.daysToUpdate.add(destDay);
     console.log('(eventDrop) initDay ', initDay);
     console.log('(eventDrop) destDay ', destDay);
-  }
-
-  loadTechs() {
-    this.topicService.getAllTags().subscribe((data) => (this.techList = data));
   }
 
   addTopic(val: any) {
@@ -409,6 +422,61 @@ export class CurriculumComponent implements OnInit {
     // add day to update set
     if (curDay && !this.daysToUpdate.has(curDay)) this.daysToUpdate.add(curDay);
     console.log(curDay);
+  }
+
+  addQC(arg: any) {
+    console.log(arg);
+    const qcId = arg.target[0].value;
+    const qcToAdd: QC | undefined = this.qcList.find((qc) => qc.id == qcId);
+    if (this.events.find((e) => e.title == qcToAdd?.name)) {
+      console.log(
+        'The qc already exists in the curriculum. For now, just refusing to add it'
+      );
+      return;
+    }
+
+    // add to this.curriculum appropiate day
+    let batchDay = this.batchDays.find((curr) => curr.date == this.day);
+    if (!batchDay) {
+      let batchId = sessionStorage.getItem('userBatchId');
+      if (!batchId) return;
+      batchDay = new BatchDay(
+        <number>(<unknown>undefined),
+        +batchId,
+        this.day,
+        [],
+        <Quiz>(<unknown>undefined),
+        <QC>(<unknown>undefined)
+      );
+    }
+    if (batchDay.qc || !qcToAdd) {
+      console.log("QC already present on that day, can't add");
+
+      return;
+    }
+    batchDay.qc = qcToAdd;
+
+    // Refresh the calendar
+    // Refer to above method (addTopic) for why I don't like this but it's here anyway
+    let newEvents = [];
+    this.events.forEach((event) => newEvents.push(event));
+    newEvents.push({
+      id: `${qcToAdd.id}`,
+      title: qcToAdd.name,
+      date: this.day,
+      tech: `QC`,
+    });
+    this.events.push({
+      id: `${qcToAdd.id}`,
+      title: qcToAdd.name,
+      date: this.day,
+      tech: `QC`,
+    });
+    this.calendarOptions.events = newEvents;
+
+    // add day to update set
+    if (!this.daysToUpdate.has(batchDay)) this.daysToUpdate.add(batchDay);
+    console.log(batchDay);
   }
 
   updateBackend() {
