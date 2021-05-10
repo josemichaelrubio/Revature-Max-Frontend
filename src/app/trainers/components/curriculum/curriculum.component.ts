@@ -29,6 +29,8 @@ export class CurriculumComponent implements OnInit {
   showDayModal: boolean = false;
   showEditButton: boolean = false;
 
+  modalErrorText: string | undefined;
+
   formData!: FormGroup;
   formRemoveData!: FormGroup;
   day!: string;
@@ -92,6 +94,13 @@ export class CurriculumComponent implements OnInit {
       }
     );
 
+    // document
+    //   .getElementById('exampleModalCenter')
+    //   ?.addEventListener('hidden.bs.modal', () => {
+    //     console.log('hidden.bs.modal event listener');
+
+    //     this.modalErrorText = '';
+    //   });
     // topicService.getAllTopics().subscribe((data) => (this.topicList = data));
   }
 
@@ -160,6 +169,10 @@ export class CurriculumComponent implements OnInit {
     this.curriculumService
       .getAllQCs()
       .subscribe((data) => (this.qcList = data));
+  }
+
+  removeErrorText() {
+    this.modalErrorText = undefined;
   }
 
   /**
@@ -266,6 +279,7 @@ export class CurriculumComponent implements OnInit {
       console.log(
         'The topic already exists in the curriculum. For now, just refusing to add it'
       );
+      this.modalErrorText = 'Can not add a duplicate topic to curriculum';
       return;
     }
 
@@ -321,6 +335,7 @@ export class CurriculumComponent implements OnInit {
       console.log(
         'The quiz already exists in the curriculum. For now, just refusing to add it'
       );
+      this.modalErrorText = 'Quiz already exists in curriculum';
       return;
     }
 
@@ -340,6 +355,7 @@ export class CurriculumComponent implements OnInit {
     }
     if (batchDay.quiz || !quizToAdd) {
       console.log("Quiz already present on that day, can't add");
+      this.modalErrorText = 'Can not add a second quiz to this day';
 
       return;
     }
@@ -364,6 +380,62 @@ export class CurriculumComponent implements OnInit {
     this.calendarOptions.events = newEvents;
 
     // console.log('(addQuiz) ', batchDay);
+    // add day to update set
+    if (!this.daysToUpdate.has(batchDay)) this.daysToUpdate.add(batchDay);
+    console.log(batchDay);
+  }
+
+  addQC(arg: any) {
+    console.log(arg);
+    const qcId = arg.target[0].value;
+    const qcToAdd: QC | undefined = this.qcList.find((qc) => qc.id == qcId);
+    if (this.events.find((e) => e.title == qcToAdd?.name)) {
+      console.log(
+        'The qc already exists in the curriculum. For now, just refusing to add it'
+      );
+      this.modalErrorText = 'QC already exists in curriculum';
+      return;
+    }
+
+    // add to this.curriculum appropiate day
+    let batchDay = this.batchDays.find((curr) => curr.date == this.day);
+    if (!batchDay) {
+      let batchId = sessionStorage.getItem('userBatchId');
+      if (!batchId) return;
+      batchDay = new BatchDay(
+        <number>(<unknown>undefined),
+        +batchId,
+        this.day,
+        [],
+        <Quiz>(<unknown>undefined),
+        <QC>(<unknown>undefined)
+      );
+    }
+    if (batchDay.qc || !qcToAdd) {
+      console.log("QC already present on that day, can't add");
+      this.modalErrorText = 'Can not add a second qc to this day';
+      return;
+    }
+    batchDay.qc = qcToAdd;
+
+    // Refresh the calendar
+    // Refer to above method (addTopic) for why I don't like this but it's here anyway
+    let newEvents = [];
+    this.events.forEach((event) => newEvents.push(event));
+    newEvents.push({
+      id: `${qcToAdd.id}`,
+      title: qcToAdd.name,
+      date: this.day,
+      tech: `QC`,
+    });
+    this.events.push({
+      id: `${qcToAdd.id}`,
+      title: qcToAdd.name,
+      date: this.day,
+      tech: `QC`,
+    });
+    this.calendarOptions.events = newEvents;
+
     // add day to update set
     if (!this.daysToUpdate.has(batchDay)) this.daysToUpdate.add(batchDay);
     console.log(batchDay);
@@ -422,61 +494,6 @@ export class CurriculumComponent implements OnInit {
     // add day to update set
     if (curDay && !this.daysToUpdate.has(curDay)) this.daysToUpdate.add(curDay);
     console.log(curDay);
-  }
-
-  addQC(arg: any) {
-    console.log(arg);
-    const qcId = arg.target[0].value;
-    const qcToAdd: QC | undefined = this.qcList.find((qc) => qc.id == qcId);
-    if (this.events.find((e) => e.title == qcToAdd?.name)) {
-      console.log(
-        'The qc already exists in the curriculum. For now, just refusing to add it'
-      );
-      return;
-    }
-
-    // add to this.curriculum appropiate day
-    let batchDay = this.batchDays.find((curr) => curr.date == this.day);
-    if (!batchDay) {
-      let batchId = sessionStorage.getItem('userBatchId');
-      if (!batchId) return;
-      batchDay = new BatchDay(
-        <number>(<unknown>undefined),
-        +batchId,
-        this.day,
-        [],
-        <Quiz>(<unknown>undefined),
-        <QC>(<unknown>undefined)
-      );
-    }
-    if (batchDay.qc || !qcToAdd) {
-      console.log("QC already present on that day, can't add");
-
-      return;
-    }
-    batchDay.qc = qcToAdd;
-
-    // Refresh the calendar
-    // Refer to above method (addTopic) for why I don't like this but it's here anyway
-    let newEvents = [];
-    this.events.forEach((event) => newEvents.push(event));
-    newEvents.push({
-      id: `${qcToAdd.id}`,
-      title: qcToAdd.name,
-      date: this.day,
-      tech: `QC`,
-    });
-    this.events.push({
-      id: `${qcToAdd.id}`,
-      title: qcToAdd.name,
-      date: this.day,
-      tech: `QC`,
-    });
-    this.calendarOptions.events = newEvents;
-
-    // add day to update set
-    if (!this.daysToUpdate.has(batchDay)) this.daysToUpdate.add(batchDay);
-    console.log(batchDay);
   }
 
   updateBackend() {
