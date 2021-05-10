@@ -50,6 +50,8 @@ export class CurriculumComponent implements OnInit {
       (data) => {
         this.batchDays = data;
         for (let curDay of this.batchDays) {
+          console.log(curDay);
+
           if (curDay.topics != null) {
             for (let topic of curDay.topics) {
               this.events.push({
@@ -139,17 +141,9 @@ export class CurriculumComponent implements OnInit {
   }
 
   loadQuizzes() {
-    // new backend has an endpoint for quizzes, so we'd just do a service call here.
-    // for old backend I'll just grab from curriculum[]
-    if (this.quizList.length == 0) {
-      this.batchDays.forEach((curriculum) => {
-        if (curriculum.quiz) {
-          this.quizList.push(curriculum.quiz);
-        }
-      });
-      console.log('Updated quiz list');
-    }
-    // Once /quizzes accepts no params, can make call here
+    this.curriculumService
+      .getAllQuizzes()
+      .subscribe((data) => (this.quizList = data));
   }
 
   /**
@@ -180,9 +174,9 @@ export class CurriculumComponent implements OnInit {
     if (!destDay) {
       let batchId = sessionStorage.getItem('userBatchId')!;
       destDay = new BatchDay(
-        -1,
+        <number>(<unknown>undefined),
         +batchId,
-        this.day,
+        destDate,
         [],
         <Quiz>(<unknown>undefined),
         <QC>(<unknown>undefined)
@@ -192,9 +186,22 @@ export class CurriculumComponent implements OnInit {
 
     // move topic or quiz in curriculum[]
     if (arg.event._def.extendedProps.tech == 'quiz') {
+      if (destDay.quiz) {
+        console.log('Day already has a quiz, exiting');
+        // revert the event? so the calendar view stays synced with array
+        return;
+      }
       const movedQuiz: Quiz = initDay?.quiz;
       initDay.quiz = <Quiz>(<unknown>undefined);
       destDay.quiz = movedQuiz;
+    } else if (arg.event._def.extendedProps.tech == 'QC') {
+      if (destDay.qc) {
+        console.log('Day already has a qc, exiting');
+        return;
+      }
+      const movedQuiz: QC = initDay?.qc;
+      initDay.qc = <QC>(<unknown>undefined);
+      destDay.qc = movedQuiz;
     } else {
       const movedTopic: Topic | undefined = initDay?.topics.find(
         (topic) => topic.name == arg.event._def.title
@@ -225,6 +232,8 @@ export class CurriculumComponent implements OnInit {
     // Mark what days are updated so when we save changes it keeps the number of requests to a minimum
     if (!this.daysToUpdate.has(initDay)) this.daysToUpdate.add(initDay);
     if (!this.daysToUpdate.has(destDay)) this.daysToUpdate.add(destDay);
+    console.log('(eventDrop) initDay ', initDay);
+    console.log('(eventDrop) destDay ', destDay);
   }
 
   loadTechs() {
@@ -233,7 +242,7 @@ export class CurriculumComponent implements OnInit {
 
   addTopic(val: any) {
     const topicId = val.target[1].value;
-    const topicToAdd: Topic | undefined = this.fullTopicList.find(
+    const topicToAdd: Topic | undefined = this.topicList.find(
       (topic) => topic.id == topicId
     );
 
@@ -255,7 +264,7 @@ export class CurriculumComponent implements OnInit {
       let batchId = sessionStorage.getItem('userBatchId');
       if (!batchId) return;
       destDay = new BatchDay(
-        -1,
+        <number>(<unknown>undefined),
         +batchId,
         this.day,
         [],
@@ -286,6 +295,7 @@ export class CurriculumComponent implements OnInit {
 
     // add day to update set
     if (!this.daysToUpdate.has(destDay)) this.daysToUpdate.add(destDay);
+    console.log(destDay);
   }
 
   addQuiz(arg: any) {
@@ -307,7 +317,7 @@ export class CurriculumComponent implements OnInit {
       let batchId = sessionStorage.getItem('userBatchId');
       if (!batchId) return;
       batchDay = new BatchDay(
-        -1,
+        <number>(<unknown>undefined),
         +batchId,
         this.day,
         [],
@@ -343,6 +353,7 @@ export class CurriculumComponent implements OnInit {
     // console.log('(addQuiz) ', batchDay);
     // add day to update set
     if (!this.daysToUpdate.has(batchDay)) this.daysToUpdate.add(batchDay);
+    console.log(batchDay);
   }
 
   saveTopic(topic: any) {
@@ -376,6 +387,13 @@ export class CurriculumComponent implements OnInit {
         if (batchDayToRemoveFrom) {
           batchDayToRemoveFrom.quiz = <Quiz>(<unknown>undefined);
         }
+      } else if (removedEvent?.tech == 'QC') {
+        const batchDayToRemoveFrom = this.batchDays.find(
+          (curr) => curr.date == removedEvent.date
+        );
+        if (batchDayToRemoveFrom) {
+          batchDayToRemoveFrom.qc = <QC>(<unknown>undefined);
+        }
       } else {
         this.batchDays
           .find((curr) => curr.date == removedEvent?.date)
@@ -390,6 +408,7 @@ export class CurriculumComponent implements OnInit {
 
     // add day to update set
     if (curDay && !this.daysToUpdate.has(curDay)) this.daysToUpdate.add(curDay);
+    console.log(curDay);
   }
 
   updateBackend() {
@@ -400,5 +419,6 @@ export class CurriculumComponent implements OnInit {
         .setBatchDay(day)
         .subscribe((val) => console.log('setBatchDay callback', val));
     }
+    this.daysToUpdate.clear();
   }
 }

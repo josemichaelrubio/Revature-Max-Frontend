@@ -35,4 +35,11 @@ export class CurriculumService {
       headers: headers,
     });
   }
+
+  getAllQuizzes() {
+    return this.http.get<any>(
+      environment.baseUrl + 'curriculum/quizzes',
+      this.httpOptions
+    );
+  }
 }
