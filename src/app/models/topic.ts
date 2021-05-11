@@ -1,16 +1,13 @@
-import { Tag } from "./tag";
+import { Tech } from './tech';
 
 export class Topic {
+  id: number;
+  tech: Tech;
+  name: string;
 
-    id:number;
-    tag: Tag;
-    name: string;
-
-    constructor(topic:any){
-        this.id = topic.id;
-        this.tag=topic.tag;
-        this.name= topic.name;
-    }
-
-
+  constructor(topic: any) {
+    this.id = topic.id;
+    this.tech = topic.tech;
+    this.name = topic.name;
+  }
 }

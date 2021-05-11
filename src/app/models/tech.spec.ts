@@ -1,7 +1,7 @@
-import { Tag } from './tag';
+import { Tech } from './tech';
 
 describe('Tag', () => {
   it('should create an instance', () => {
-    expect(new Tag()).toBeTruthy();
+    expect(new Tech()).toBeTruthy();
   });
 });
