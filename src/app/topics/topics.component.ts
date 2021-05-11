@@ -16,9 +16,16 @@ export class TopicsComponent implements OnInit {
   userName = JSON.parse(sessionStorage.getItem("user")!).name;
 
   topic!: Topic;
-  competency: number | null = null;
-  starredNotesId: number | null = null;
+  competency: number = 0;
+  starredNotes: Notes | null = null;
   notes = new Array<Notes>();
+  isEditing : boolean = false;
+  selfNotes : Notes = {
+    notesId: null,
+    employee: {id: 0, name: ""},
+    timesStarred: 0,
+    content: ""
+  };
 
   constructor(private router: Router, private topicService: TopicService) {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: any) => {
@@ -33,18 +40,18 @@ export class TopicsComponent implements OnInit {
       (res) => { 
         this.topic = res.topic;
         this.competency = res.competency || 0;
-        this.starredNotesId = res.starredNotesId;
+        var notes = res.notes;
+
+        var selfIdx = notes.findIndex(e => e.employee.id == this.userId)
+        if(selfIdx != -1)
+          this.selfNotes = notes.splice(selfIdx, 1)[0];
+        
+        if(res.starredNotesId != null) {
+          var starredNotesIdx = notes.findIndex(e => e.notesId == res.starredNotesId)
+          if(starredNotesIdx != -1)
+            this.starredNotes = notes.splice(starredNotesIdx, 1)[0];
+        }
         this.notes = res.notes;
-        let userNotesPresent = false;
-        for (let n of this.notes) {
-          if (n.employee.id == this.userId) {
-            userNotesPresent = true;
-            break;
-          }
-        }
-        if (!userNotesPresent) {
-          this.notes.push({ notesId: null, employee: { id: this.userId, name: this.userName }, timesStarred: 0, content: "" });
-        }
       }, (err) => {
         console.log(err);
       }
@@ -52,8 +59,9 @@ export class TopicsComponent implements OnInit {
   }
 
   updateCompetency(): void {
-    let employeeTopic = { "competency": this.competency, "favNotes": this.starredNotesId };
-    this.topicService.setEmployeeTopic(JSON.stringify(employeeTopic)).pipe(take(1)).subscribe(
+    console.log("Updating competency")
+    let employeeTopic = { competency: this.competency, favNotes: this.starredNotes ? this.starredNotes.notesId : null };
+    this.topicService.setEmployeeTopic(JSON.stringify(employeeTopic)).subscribe(
       (res) => {},
       (err) => {
         console.log(err);
@@ -61,19 +69,19 @@ export class TopicsComponent implements OnInit {
     );
   }
 
-  updateStarredNotesId(notesSelected: Notes): void {
-    let employeeTopic = { "competency": this.competency, "favNotes": this.starredNotesId };
-    this.topicService.setEmployeeTopic(JSON.stringify(employeeTopic)).pipe(take(1)).subscribe(
+  updateStarredNotes(notesSelected: Notes): void {
+    let employeeTopic = { competency: this.competency, favNotes: this.starredNotes ? this.starredNotes.notesId : null };
+    this.topicService.setEmployeeTopic(JSON.stringify(employeeTopic)).subscribe(
       (res) => {
-        if (this.starredNotesId == notesSelected.notesId) {
-          this.starredNotesId = null;
-          notesSelected.timesStarred--;
-        } else {
-          if (this.starredNotesId !== null) {
-            this.notes.find(i => i.notesId == this.starredNotesId)!.timesStarred--;
+        if(notesSelected) {
+          if(this.starredNotes) {
+            this.starredNotes.timesStarred--;
           }
-          this.starredNotesId = notesSelected.notesId;
           notesSelected.timesStarred++;
+          this.starredNotes = notesSelected;
+        } else {
+          this.starredNotes!.timesStarred--;
+          this.starredNotes = null;
         }
       }, (err) => {
         console.log(err);
@@ -81,15 +89,15 @@ export class TopicsComponent implements OnInit {
     );
   }
 
-  updateNotes(userNotes: Notes): void {
-    let o = { "id": userNotes.notesId ? userNotes.notesId : null, "topic": { "id": this.topicService.selectedTopicId }, "notes": userNotes.content };
-    this.topicService.setNotes(JSON.stringify(o)).pipe(take(1)).subscribe(
+  updateNotes(): void {
+    let o = { "id": this.selfNotes.notesId ? this.selfNotes.notesId : null, "topic": { "id": this.topicService.selectedTopicId }, "notes": this.selfNotes.content };
+    this.topicService.setNotes(JSON.stringify(o)).subscribe(
       (res) => {
-        if (!userNotes.notesId) {
+        if (!this.selfNotes.notesId) {
           if (!res) {
-            userNotes.notesId = null;
+            this.selfNotes.notesId = null;
           } else {
-            userNotes.notesId = res;
+            this.selfNotes.notesId = res;
           }
         }
       }, (err) => {
