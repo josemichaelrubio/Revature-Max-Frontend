@@ -1,0 +1,40 @@
+<div class="main-div">
+	<div class="dropdown">
+		<h2>Instructor Feedback For QC</h2>
+		<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		Select QC
+		</button>
+		<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+			<a class="dropdown-item" *ngFor='let qc of qcs' (click)="qcSelected(qc.id)">{{qc.name}}</a>
+		</div>
+	</div>
+	<section id="wrapper" class="text-center">
+    <br>
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Email</th>
+                <th scope="col">Name</th>
+                <th scope="col">Feedback</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!--- Need to implement method qcFeedback on click--->
+            <tr *ngFor="let employee of associates">
+                <td>{{employee.id}}</td>
+                <td>{{employee.email}}</td>
+                <td>{{employee.name}}</td>
+                <td><span>
+                	<img class="emoji" src="assets/images/unknown-qc.jpg" [class.selected]="employee.qcScore === 0" (click)="setQCFeedback(employee.id, employee.qcId, 0)">
+                	<img class="emoji" src="assets/images/sad-qc.jpg" [class.selected]="employee.qcScore === 1" (click)="setQCFeedback(employee.id, employee.qcId, 1)">
+                	<img class="emoji" src="assets/images/meh-qc.jpg" [class.selected]="employee.qcScore === 2" (click)="setQCFeedback(employee.id, employee.qcId, 2)">
+                	<img class="emoji" src="assets/images/happy-qc.jpg" [class.selected]="employee.qcScore === 3" (click)="setQCFeedback(employee.id, employee.qcId, 3)">
+                	<img class="emoji" src="assets/images/star-qc.jpg" [class.selected]="employee.qcScore === 4" (click)="setQCFeedback(employee.id, employee.qcId, 4)"></span></td>
+            </tr>
+        </tbody>
+        
+
+    </table>
+</section>
+</div>

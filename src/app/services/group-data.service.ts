@@ -18,23 +18,50 @@ export class GroupDataService {
 
   testBatchUrl: string = "http://localhost:80/batches/1/associates"
 
-  httpOptions = {
-    headers: new HttpHeaders({"Authorization": this.token})
-  };
-
   constructor(private http: HttpClient) { }
 
-  getAllAssociates(): Observable<User[]>{
-    return this.http.get<User[]>(this.batchAssociatesUrl)
+  getAllAssociates(): Observable<any[]>{
+    return this.http.get<any[]>(`http://localhost:8083/batches/${this.batchId}/associates`);
   }
 
   addAssociates(associates: User[]): Observable<User[]>{
-    return this.http.post<User[]>(this.batchAssociatesUrl, associates, this.httpOptions);
+    const httpOptions = {
+    headers: new HttpHeaders({"Authorization": this.token, "Content-Type":"application/json"})
+  };
+    return this.http.post<User[]>(this.batchAssociatesUrl, associates, httpOptions);
   }
 
   removeAssociate(associate: User): Observable<any>{
-    return this.http.delete<any>(this.batchAssociatesUrl+`/${associate.id}`, this.httpOptions);
+    const httpOptions = {
+    headers: new HttpHeaders({"Authorization": this.token, "Content-Type":"application/json"})
+  };
+    return this.http.delete<any>(this.batchAssociatesUrl+`/${associate.id}`, httpOptions);
+  }
+
+  setQCFeedbackForEmployee(employeeId: number, qcId: number, instructorFeedback: number) : Observable<any> {
+    const payload = `instructor-feedback=${instructorFeedback}`
+    const httpOptions = {headers: new HttpHeaders({"Authorization": this.token, "Content-Type":"application/x-www-form-urlencoded"})};
+    return this.http.put(`http://localhost:8082/employees/${employeeId}/qcs/${qcId}/instructor-feedback`, payload, httpOptions)
+
+  }
+
+
+  getQCsFromBatch() : Observable<any> {
+    const httpOptions = {
+    headers: new HttpHeaders({"Authorization": this.token})
+  };
+    return this.http.get<any[]>("http://localhost:8085/curriculum/qcs", httpOptions);
+  }
+
+
+  getQCFeedbackScores(employeeIds: number[]) : Observable<any> {
+    const httpOptions = {
+    headers: new HttpHeaders({"Authorization": this.token})
+  };
+
+  return this.http.get<any[]>(`http://localhost:8082/employees?id=${employeeIds.toString()}&field=qc-feedbacks`, httpOptions);
   }
 
 
 }
+
