@@ -15,8 +15,7 @@ import { NavGroupComponent } from './components/nav-group/nav-group.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin
-import interactionPlugin from '@fullcalendar/interaction';
-import { QcComponent } from './components/qc/qc.component'; // a plugin
+import interactionPlugin from '@fullcalendar/interaction'; // a plugin
 
 
 FullCalendarModule.registerPlugins([
@@ -35,8 +34,7 @@ FullCalendarModule.registerPlugins([
     RepoLinksComponent,
     InviteComponent,
     LandingComponent,
-    NavGroupComponent,
-    QcComponent
+    NavGroupComponent
     
 
   ],

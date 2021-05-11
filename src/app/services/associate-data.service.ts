@@ -18,7 +18,7 @@ export class AssociateDataService {
   associatesUrl: string = environment.baseUrl+`/employees/${this.associateId}`;
 
   httpOptions = {
-    headers: new HttpHeaders({"Authorization": this.token, "Content-Type":"application/json"})
+    headers: new HttpHeaders({"Authorization": this.token})
   };
 
   constructor(private http: HttpClient) { 
@@ -33,7 +33,7 @@ export class AssociateDataService {
     console.log(quizId);
     let user = JSON.parse(sessionStorage.getItem("user") || "");
     console.log(user);
-    this.http.put(environment.baseUrl+`/employees/${user.id}/quizzes/${quizId}`, employeeQuiz, this.httpOptions).subscribe(
+    this.http.put(environment.baseUrl+`/employees/${user.id}/quizzes/${quizId}`, employeeQuiz, { headers : new HttpHeaders({"Authorization":this.token,"Content-Type":"application/json"})}).subscribe(
        (response) => console.log(response),
        (error) => console.log(error),
        () => console.log()
