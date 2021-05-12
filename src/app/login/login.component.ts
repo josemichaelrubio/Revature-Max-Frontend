@@ -3,6 +3,7 @@ import { AuthService } from './../services/auth.service';
 import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { NavChangeService } from 'app/services/nav-change.service';
+import { AssociateDataService } from 'app/services/associate-data.service';
 
 @Component({
   selector: 'app-login',
@@ -25,7 +26,8 @@ export class LoginComponent implements OnInit {
     this.authService.attemptLogin(this.email,this.password).subscribe(
       (res)=>{
         this.message = "Successful login";
-        this.response = res;
+        console.log(res);
+        this.response=res;
     },
     (res)=>{this.message = res.error.title;
     },

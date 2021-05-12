@@ -16,7 +16,7 @@ export class GroupDataService {
   batchUrl: string = environment.baseUrl+`/batches/${this.batchId}`;
   batchAssociatesUrl: string = environment.baseUrl+`/batches/${this.batchId}/associates`;
 
-  testBatchUrl: string = "http://localhost:80/batches/1/associates"
+  testBatchUrl: string = "http://localhost:80/batches/1/associates";
 
   httpOptions = {
     headers: new HttpHeaders({"Authorization": this.token})
