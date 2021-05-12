@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit} from '@angular/core';
 import { take, filter } from 'rxjs/operators';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { TopicService } from '../services/topic.service';
 import { Topic } from '../models/topic';
 import { Notes } from '../models/notes';
@@ -21,26 +21,31 @@ export class TopicsComponent implements OnInit {
   notes = new Array<Notes>();
   isEditing : boolean = false;
   selfNotes : Notes = {
-    id: 0,
+    id: null,
     employee: {id: 0, name: ""},
     votes: 0,
     content: ""
   };
 
-  constructor(private router: Router, private topicService: TopicService) {
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: any) => {
-      if (event.url == '/topics') {
-        this.ngOnInit();
-      }
-    });
+  constructor(private router : ActivatedRoute, private topicService: TopicService) {
+    // this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: any) => {
+    //   if (event.url == '/topics') {
+    //     this.ngOnInit();
+    //   }
+    // });
+    this.router.params.subscribe(params => {
+      topicService.selectedTopicId.next(+params['id'])
+      topicService.selectedTopicName.next(params["name"])
+    })
+    // if(topicService.selectedTopicId.getValue() == 0) {
+    //   router.navigate(['/batch/curriculum'])
+    // }
   }
 
   ngOnInit(): void {
-    console.log("init topics")
     this.topicService.getTopicDTO().subscribe(
       (res) => {
         this.competency = res.competency || 0;
-        console.log(res)
         var notes = res.notes;
 
         var selfIdx = notes.findIndex(e => e.employee.id == this.userId)
@@ -79,20 +84,17 @@ export class TopicsComponent implements OnInit {
     let employeeTopic = { competency: this.competency, favNotes: notesSelected ? notesSelected.id : null };
     this.topicService.setEmployeeTopic(JSON.stringify(employeeTopic)).subscribe(
       (res) => {
+        if(this.starredNotes) {
+          this.starredNotes.votes--;
+          this.notes.push(this.starredNotes!);
+          this.notes = this.notes.sort((a,b) => b.votes - a.votes);
+        }
         if(notesSelected) {
-          if(this.starredNotes) {
-            this.starredNotes.votes--;
-            this.notes.push(this.starredNotes!);
-            this.notes = this.notes.sort((a,b) => b.votes - a.votes);
-          }
           notesSelected.votes++;
           this.starredNotes = notesSelected;
           var starredidx = this.notes.findIndex(e => e.id == this.starredNotes!.id)
           this.starredNotes = this.notes.splice(starredidx, 1)[0];
         } else {
-          this.starredNotes!.votes--;
-          this.notes.push(this.starredNotes!);
-          this.notes = this.notes.sort((a,b) => b.votes - a.votes);
           this.starredNotes = null;
         }
       }, (err) => {
@@ -102,11 +104,15 @@ export class TopicsComponent implements OnInit {
   }
 
   updateNotes(): void {
-    let o = { id: this.selfNotes.id ? this.selfNotes.id : null, topicId:this.topicService.selectedTopicId , content: this.selfNotes.content };
+
+    var text = (<HTMLTextAreaElement>document.getElementById("selfNotes-content")).value;
+    let o = { id: this.selfNotes.id ? this.selfNotes.id : null, topicId:this.topicService.selectedTopicId.getValue() , content: text };
     console.log(o);
     this.topicService.setNotes(JSON.stringify(o)).subscribe(
       (res) => {
         this.isEditing = false;
+        this.selfNotes.content = text;
+        this.selfNotes.id = +res;
       }, (err) => {
         console.log(err);
       }

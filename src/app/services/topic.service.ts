@@ -10,8 +10,8 @@ import { Tech } from 'app/models/tech';
   providedIn: 'root',
 })
 export class TopicService {
-  selectedTopicId: number = 1;
-  selectedTopicName = new BehaviorSubject<string>("");
+  selectedTopicId = new BehaviorSubject(0);
+  selectedTopicName = new BehaviorSubject<string>("Topic Name");
   
   constructor(private http: HttpClient) {}
 
@@ -23,7 +23,7 @@ export class TopicService {
     });
     return this.http.get<TopicDTO>(
       environment.baseUrl +
-        `/employees/notes/${this.selectedTopicId}?employee=${userId}`,
+        `employees/notes/${this.selectedTopicId.getValue()}?employee=${userId}`,
       { headers: headers }
     );
   }
@@ -36,7 +36,7 @@ export class TopicService {
     });
     return this.http.put(
       environment.baseUrl +
-        `/employees/${user.id}/topics/${this.selectedTopicId}`,
+        `employees/${user.id}/topics/${this.selectedTopicId.getValue()}`,
       employeeTopic,
       { headers: headers }
     );
@@ -49,7 +49,7 @@ export class TopicService {
       'Content-Type': 'application/json',
     });
     return this.http.put(
-      environment.baseUrl + `/employees/${user.id}/notes`,
+      environment.baseUrl + `employees/${user.id}/notes`,
       notes,
       { headers: headers }
     );

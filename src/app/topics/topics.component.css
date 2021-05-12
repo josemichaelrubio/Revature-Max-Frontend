@@ -14,12 +14,10 @@ header,
 
 }
 
-ul {
-	list-style: none;
-}
 
-li {
-	margin: 5px
+.container {
+	text-align: center;
+	margin: 10em auto;
 }
 
 .notes-btn {
@@ -54,4 +52,15 @@ textarea {
 
 .border-0 {
 	width: 100%
+}
+
+.card {
+	width: 100%;
+	margin: 10px;
+}
+
+.notes-list {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 }

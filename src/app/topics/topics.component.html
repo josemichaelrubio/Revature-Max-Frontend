@@ -4,76 +4,64 @@
 
     <div class="container-fluid d-flex align-items-center justify-content-center h-100">
 
-      <div class="row d-flex justify-content-center text-center">
+      <div class="col-md-10">
 
-        <div class="col-md-10">
-
-          <br><br><br><br><br><br><br><br><br><br> 
-
-
-          <div class="container">
-            <h1 style="color:white;"></h1><hr>
-            <p style="color:white;">My competency:</p>
-            <div class="d-flex justify-content-center">
-              <span class="font-weight-bold indigo-text">0</span>
-              <form class="range-field">
-                <input class="border-0" type="range" min="0" max="5" 
-                  [(ngModel)]="competency" name="comp" (change)="updateCompetency()"/>
-              </form>
-              <span class="font-weight-bold indigo-text">5</span>
-            </div>
-            <p style="color: white;">{{competency}}</p>
-            <hr>
-            <ul>
-              <li>
-                <div class="card">
-                  <div class="card-header" style="background-color: rgb(209, 108, 36);">
-                    <h5>My Notes</h5>
-                  </div>
-                  <div class="card-body">
-                    <p class="card-text" *ngIf="selfNotes && !isEditing">{{selfNotes.content}}</p>
-                    <textarea *ngIf="!selfNotes || isEditing" [(ngModel)]="selfNotes.content"></textarea>
-                    <div>
-                      <button class="btn notes-btn" (click)="isEditing = !isEditing">
-                        {{isEditing ? "Cancel" : "Edit"}}
-                      </button>
-                      <button class="btn notes-btn" *ngIf="isEditing" (click)="updateNotes()">Save</button>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <hr>
-              <li *ngIf="starredNotes">
-                <div class="card">
-                  <div class="card-header" style="background-color: #FCB414;">
-                    <h5>{{starredNotes.employee.name}}'s Notes</h5>
-                  </div>
-                  <div class="card-body">
-                    <p class="card-text">{{starredNotes.content}}</p>
-                    <button class="btn notes-btn" (click)="updateStarredNotes(null)">
-                      Unfavorite <span class="badge badge-light">{{starredNotes.votes}}</span>
-                    </button>
-                  </div>
-                </div>
-              </li>
-              <hr>
-              <li *ngFor="let n of notes; let index = index; trackBy:trackByIndex">
-                <div class="card">
-                  <div class="card-header">
-                    <h5>{{n.employee.name}}'s Notes</h5>
-                  </div>
-                  <div class="card-body">
-                    <p class="card-text">{{n.content}}</p>
-                    <button class="btn notes-btn" (click)="updateStarredNotes(n)">
-                      Favorite <span class="badge badge-light">{{n.votes}}</span>
-                    </button>
-                  </div>
-                </div>
-              </li>
-            </ul>
+        <div class="container">
+          <h1 style="color:white;">{{topic}}</h1><hr>
+          <p style="color:white;">My competency:</p>
+          <div class="d-flex justify-content-center">
+            <span class="font-weight-bold indigo-text">0</span>
+            <form class="range-field">
+              <input class="border-0" type="range" min="0" max="5" 
+                [(ngModel)]="competency" name="comp" (change)="updateCompetency()"/>
+            </form>
+            <span class="font-weight-bold indigo-text">5</span>
           </div>
-          
-          <br><br><br><br><br><br><br><br><br><br><br><br>
+          <p style="color: white;">{{competency}}</p>
+          <hr>
+          <div class="notes-list">
+            <div class="card">
+              <div class="card-header" style="background-color: rgb(209, 108, 36);">
+                <h5>My Notes</h5>
+              </div>
+              <div class="card-body">
+                <p class="card-text" *ngIf="selfNotes && !isEditing">{{selfNotes.content}}</p>
+                <textarea *ngIf="!selfNotes || isEditing" id="selfNotes-content" [value]="selfNotes.content"></textarea>
+                <div>
+                  <button class="btn notes-btn" (click)="isEditing = !isEditing">
+                    {{isEditing ? "Cancel" : "Edit"}}
+                  </button>
+                  <button class="btn notes-btn" *ngIf="isEditing" (click)="updateNotes()">Save</button>
+                </div>
+              </div>
+            </div>
+            <hr>
+            
+            <div class="card" *ngIf="starredNotes">
+              <div class="card-header" style="background-color: #FCB414;">
+                <h5>{{starredNotes.employee.name}}'s Notes</h5>
+              </div>
+              <div class="card-body">
+                <p class="card-text">{{starredNotes.content}}</p>
+                <button class="btn notes-btn" (click)="updateStarredNotes(null)">
+                  Unfavorite <span class="badge badge-light">{{starredNotes.votes}}</span>
+                </button>
+              </div>
+            </div>
+            <hr>
+
+            <div class="card" *ngFor="let n of notes; let index = index; trackBy:trackByIndex">
+              <div class="card-header">
+                <h5>{{n.employee.name}}'s Notes</h5>
+              </div>
+              <div class="card-body">
+                <p class="card-text">{{n.content}}</p>
+                <button class="btn notes-btn" (click)="updateStarredNotes(n)">
+                  Favorite <span class="badge badge-light">{{n.votes}}</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
