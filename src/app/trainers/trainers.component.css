@@ -11,6 +11,8 @@ header,
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover;
+	padding-top: 2vw;
+	padding-bottom: 10vw;
 
 }
 
