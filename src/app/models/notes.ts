@@ -1,6 +1,6 @@
 export interface Notes {
-    notesId: number | null;
+    id: number | null;
     employee: { id: number, name: string };
-    timesStarred: number;
+    votes: number;
     content: string;
 }

@@ -2,8 +2,7 @@ import { Topic } from './topic';
 import { Notes } from './notes';
 
 export interface TopicDTO {
-    topic: Topic;
     competency: number;
-    starredNotesId: number;
+    fav_notes_id: number;
     notes: Notes[];
 }

@@ -91,6 +91,7 @@ export class CurriculumComponent implements OnInit {
   handleEventClick(arg: any) {
     console.log(arg);
     this.topicService.selectedTopicId = +arg.event._def.publicId;
+    this.topicService.selectedTopicName.next(arg.event._def.title);
     this.router.navigateByUrl('/topics');
   }
 

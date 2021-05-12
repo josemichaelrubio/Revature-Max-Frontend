@@ -12,26 +12,62 @@
 
 
           <div class="container">
-            <h1 style="color:white;">({{topic.tag.name}}) {{topic.name}}</h1>
-            <p style="color:white;">My competency: 
-              <input type="range" min="0" max="5" [(ngModel)]="competency" (ngModelChange)="updateCompetency()"
-              [ngModelOptions]="{updateOn: 'blur'}" />
-            </p>
-            <ul style="color:white">
+            <h1 style="color:white;"></h1><hr>
+            <p style="color:white;">My competency:</p>
+            <div class="d-flex justify-content-center">
+              <span class="font-weight-bold indigo-text">0</span>
+              <form class="range-field">
+                <input class="border-0" type="range" min="0" max="5" 
+                  [(ngModel)]="competency" name="comp" (change)="updateCompetency()"/>
+              </form>
+              <span class="font-weight-bold indigo-text">5</span>
+            </div>
+            <p style="color: white;">{{competency}}</p>
+            <hr>
+            <ul>
               <li>
-                <h3>My Notes</h3>
-                <div *ngIf="selfNotes && !isEditing">{{selfNotes.content}}</div>
-                <textarea *ngIf="!selfNotes || isEditing" [(ngModel)]="selfNotes.content"></textarea>
-                <button (click)="isEditing = !isEditing">Edit</button>
+                <div class="card">
+                  <div class="card-header" style="background-color: rgb(209, 108, 36);">
+                    <h5>My Notes</h5>
+                  </div>
+                  <div class="card-body">
+                    <p class="card-text" *ngIf="selfNotes && !isEditing">{{selfNotes.content}}</p>
+                    <textarea *ngIf="!selfNotes || isEditing" [(ngModel)]="selfNotes.content"></textarea>
+                    <div>
+                      <button class="btn notes-btn" (click)="isEditing = !isEditing">
+                        {{isEditing ? "Cancel" : "Edit"}}
+                      </button>
+                      <button class="btn notes-btn" *ngIf="isEditing" (click)="updateNotes()">Save</button>
+                    </div>
+                  </div>
+                </div>
               </li>
+              <hr>
               <li *ngIf="starredNotes">
-                <h3>{{starredNotes.employee.name}}'s Notes</h3>
-                <div>{{starredNotes.content}}</div>
+                <div class="card">
+                  <div class="card-header" style="background-color: #FCB414;">
+                    <h5>{{starredNotes.employee.name}}'s Notes</h5>
+                  </div>
+                  <div class="card-body">
+                    <p class="card-text">{{starredNotes.content}}</p>
+                    <button class="btn notes-btn" (click)="updateStarredNotes(null)">
+                      Unfavorite <span class="badge badge-light">{{starredNotes.votes}}</span>
+                    </button>
+                  </div>
+                </div>
               </li>
+              <hr>
               <li *ngFor="let n of notes; let index = index; trackBy:trackByIndex">
-                <div >
-                  <h3>{{n.employee.name}}'s Notes</h3>
-                  <div>{{n.content}}</div>
+                <div class="card">
+                  <div class="card-header">
+                    <h5>{{n.employee.name}}'s Notes</h5>
+                  </div>
+                  <div class="card-body">
+                    <p class="card-text">{{n.content}}</p>
+                    <button class="btn notes-btn" (click)="updateStarredNotes(n)">
+                      Favorite <span class="badge badge-light">{{n.votes}}</span>
+                    </button>
+                  </div>
                 </div>
               </li>
             </ul>
