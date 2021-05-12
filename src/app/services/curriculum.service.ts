@@ -21,8 +21,7 @@ export class CurriculumService {
 
   getBatchDays(): Observable<any> {
     return this.http.get<any>(
-      // environment.baseUrl + `batch-days?batch=${this.batchId}`,
-      `http://localhost:8085/batch-days?batch=${this.batchId}`,
+      environment.baseUrl + `batch-days?batch=${this.batchId}`,
       this.httpOptions
     );
   }
