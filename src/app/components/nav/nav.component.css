@@ -9,8 +9,10 @@
     margin: 0px auto;
 }
 #full-nav{
-  background: url("../../../revMax_background.jpg");
-  background-position-y:6%;
+ 
+  background: url("../../../simple_background.jpg")no-repeat 0% 6% fixed;
+  background-position:6%;
+
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
