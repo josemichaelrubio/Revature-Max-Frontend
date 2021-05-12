@@ -67,7 +67,21 @@ header,
 	background-size: cover;
 
 }
+#batch-dash-btns{
+	margin-right: 9vw;
+}
+.dash-btn{
+	width: 10vw;
+	height: 2.5vw;
+	font-size: 1vw;
+	min-width: 75px;
+	min-height: 25px;
+	
+}
+.my-4{
+	padding-top: 5em;
+}
 
-.btn-group {
-	margin-right: 5rem;
+h1{
+	font-size: 1.5em;
 }
