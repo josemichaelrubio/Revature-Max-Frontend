@@ -11,9 +11,10 @@ import { BatchDay } from 'app/models/batch-day';
 export class CurriculumService {
   initialEvents: EventInput[] = [];
 
-  token: string = sessionStorage.getItem('token') || '';
+  token: string = sessionStorage.getItem('token') || 'cody';
 
   batchId: number = +(sessionStorage.getItem('userBatchId') || 1);
+
 
   constructor(private http: HttpClient) {}
 
