@@ -17,25 +17,30 @@ export class QcComponent implements OnInit {
 	errorMessage: String = "";
 	associates: any[] = [];
 	qcs : QC[] = [];
+	currentQC:QC=this.qcs[0];
  
 
   constructor(private groupData: GroupDataService) {
 
   	groupData.getAllAssociates().subscribe((usersReturned)=> {
   		usersReturned.forEach((user)=>this.associates.push(user.employee));
+		  this.qcSelected(1); 
   	},
     (err)=>{this.errorMessage = "Could not find any associates for your assigned batch!"});
 
 
  	groupData.getQCsFromBatch().subscribe((qcsReturned) => {
  		this.qcs = qcsReturned;
+		
  	},
  	(err)=>{this.errorMessage = "Could not find any qcs for this batch"});
-   
+   	
    }
 
 
    qcSelected(qcId: number) {
+	   console.log("here")
+	   
    		this.groupData.getQCFeedbackScores(this.associates.map((x) => x.id)).subscribe(
    				(returned) => {
    					for (let employeeDTO of returned) {
@@ -57,9 +62,13 @@ export class QcComponent implements OnInit {
 						console.log(this.associates);
 
    					}
+					   
    				}
    			);
+			   this.currentQC=this.qcs[qcId-1];
+			   
    }
+   
 
 
    setQCFeedback(employeeId: number, qcId: number, instructorFeedback: number) {

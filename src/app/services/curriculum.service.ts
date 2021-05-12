@@ -15,6 +15,7 @@ export class CurriculumService {
 
   batchId: number = +(sessionStorage.getItem('userBatchId') || 1);
 
+
   constructor(private http: HttpClient) {}
 
   httpOptions = { headers: new HttpHeaders({ Authorization: this.token }) };

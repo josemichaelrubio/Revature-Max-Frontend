@@ -1,10 +1,10 @@
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top scrolling-navbar">
+<nav id="full-nav" class="navbar navbar-expand-lg navbar-dark fixed-top scrolling-navbar">
 
-    <div class="container">
+    <div class="container-fluid">
 
       <!-- Navbar brand -->
       <a class="navbar-brand" routerLink="/home">
-        <img src='https://cdn.discordapp.com/attachments/829497330021302322/834067085109231626/revature-max-logo-removebg-preview.png' alt="Revature" style="height: 60px; width: 150px;"></a>
+        <img src='https://cdn.discordapp.com/attachments/829497330021302322/834067085109231626/revature-max-logo-removebg-preview.png' alt="Revature" style="margin-left: 5vw; height: 60px; width: 150px;"></a>
 
       <!-- Collapse button -->
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
@@ -30,7 +30,7 @@
             </ul>
             <!-- Links -->
         </div>
-        <div style='float: right;'>
+        <div style='float: right; margin-right: 5vw;'>
             <button routerLink="/login" class="btn btn-outline-light btn-round" *ngIf="!isLoggedIn">Log In</button>
             <button class="btn btn-outline-light btn-round" (click)="logOut()" *ngIf="isLoggedIn">Log Out</button>
         </div>

@@ -14,7 +14,7 @@ export class GroupDataService {
   token: string = sessionStorage.getItem("token") || '';
 
   batchUrl: string = environment.baseUrl+`/batches/${this.batchId}`;
-  batchAssociatesUrl: string = environment.baseUrl+`/batches/${this.batchId}/associates`;
+  batchAssociatesUrl: string = "http://40.76.1.66:8083"+`/batches/${this.batchId}/associates`;
 
   testBatchUrl: string = "http://localhost:80/batches/1/associates"
 
@@ -24,7 +24,8 @@ export class GroupDataService {
     return this.http.get<any[]>(`http://localhost:8083/batches/${this.batchId}/associates`);
   }
 
-  addAssociates(associates: User[]): Observable<User[]>{
+
+  addAssociates(associates: any[]): Observable<any[]>{
     const httpOptions = {
     headers: new HttpHeaders({"Authorization": this.token, "Content-Type":"application/json"})
   };
