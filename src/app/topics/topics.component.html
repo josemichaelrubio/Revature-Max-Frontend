@@ -12,7 +12,7 @@
 
 
           <div class="container">
-            <!-- <h1 style="color:white;">({{topic.tag.name}}) {{topic.name}}</h1> -->
+            <h1 style="color:white;">({{topic.tech.name}}) {{topic.name}}</h1>
             <p style="color:white;">My competency: 
               <input type="range" min="0" max="5" [(ngModel)]="competency" (ngModelChange)="updateCompetency()"
               [ngModelOptions]="{updateOn: 'blur'}" />
