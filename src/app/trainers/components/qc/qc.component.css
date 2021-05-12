@@ -1,0 +1,24 @@
+.main-div {
+	background: white;
+	border-radius: 1em;
+	text-align: center;
+	padding:2rem;
+}
+
+.emoji {
+	margin:0.3rem;
+	cursor: pointer;
+	filter: grayscale(100%);
+}
+
+.emoji:hover {
+	filter: none;
+}
+
+.dropdown-menu {
+	cursor: pointer;
+}
+
+.selected {
+	filter: none;
+}

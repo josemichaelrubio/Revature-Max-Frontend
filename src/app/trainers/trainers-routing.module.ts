@@ -5,6 +5,7 @@ import { CurriculumComponent } from './components/curriculum/curriculum.componen
 import { InfoComponent } from './components/info/info.component';
 import { InviteComponent } from './components/invite/invite.component';
 import { TrainersComponent } from './trainers.component';
+import { QcComponent } from './components/qc/qc.component';
 
 const routes: Routes = [
     { path: '', component: TrainersComponent, children:
@@ -12,7 +13,8 @@ const routes: Routes = [
         { path: 'info', component: InfoComponent},
         { path: 'batch-data', component: BatchDataComponent },
         { path: 'batch-associates', component: InviteComponent },
-        { path: 'curriculum', component: CurriculumComponent }
+        { path: 'curriculum', component: CurriculumComponent },
+        { path: 'qc', component: QcComponent}
       ]
     },
   

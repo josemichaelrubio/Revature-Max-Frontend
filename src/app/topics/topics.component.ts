@@ -102,7 +102,7 @@ export class TopicsComponent implements OnInit {
   }
 
   updateNotes(): void {
-    let o = { "id": this.selfNotes.id ? this.selfNotes.id : null, "topic": { "id": this.topicService.selectedTopicId }, "notes": this.selfNotes.content };
+    let o = { id: this.selfNotes.id ? this.selfNotes.id : null, topicId:this.topicService.selectedTopicId , content: this.selfNotes.content };
     console.log(o);
     this.topicService.setNotes(JSON.stringify(o)).subscribe(
       (res) => {
