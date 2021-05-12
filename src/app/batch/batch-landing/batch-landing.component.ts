@@ -11,6 +11,4 @@ export class BatchLandingComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
-
 }
