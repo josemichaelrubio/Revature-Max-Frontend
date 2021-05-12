@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-   //baseUrl: "http://20.185.67.43/"
-  baseUrl: 'http://localhost:8085/',
+   baseUrl: "http://13.82.103.66:9990/"
+  // baseUrl: 'http://localhost:8085/',
 };
 
 /*

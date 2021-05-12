@@ -4,6 +4,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { TopicService } from '../services/topic.service';
 import { Topic } from '../models/topic';
 import { Notes } from '../models/notes';
+import { NavChangeService } from 'app/services/nav-change.service';
 
 @Component({
   selector: 'app-topics',
@@ -27,7 +28,8 @@ export class TopicsComponent implements OnInit {
     content: ""
   };
 
-  constructor(private router: Router, private topicService: TopicService) {
+  constructor(private router: Router, private topicService: TopicService, private nav: NavChangeService) {
+    console.log("persisting navbar state");
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: any) => {
       if (event.url == '/topics') {
         this.ngOnInit();

@@ -14,7 +14,7 @@ export class AssociateDataService {
   token: string = sessionStorage.getItem("token") || '';
   emp: User = JSON.parse(sessionStorage.getItem("user")||'');
   empID: number = this.emp.id;
-  associateId : number = JSON.parse(sessionStorage.getItem("user") || "").id;
+  associateId : string = sessionStorage.getItem("userId") || '0';
 
   associatesUrl: string = environment.baseUrl+`/employees/${this.associateId}`;
   employeeTestUrl: string = "http://localhost:8082/employees";
@@ -44,7 +44,11 @@ export class AssociateDataService {
   }
 
   getEmployeeProfile(): Observable<UserProfile>{
-    return this.http.get<UserProfile>(this.employeeTestUrl+`/1`);
+    return this.http.get<UserProfile>(this.associatesUrl, this.httpOptions);
+  }
+
+  getBatchId(employeeId: string): Observable<any>{
+    return this.http.get<any>(environment.baseUrl+'batches/'+employeeId+'/batch', this.httpOptions);
   }
 
 }

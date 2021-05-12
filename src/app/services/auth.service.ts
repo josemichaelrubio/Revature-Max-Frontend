@@ -1,11 +1,12 @@
 import { UserRegistration } from './../models/user-registration';
 import { LoginResponse } from './../models/login-response';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable} from '@angular/core';
 import { BehaviorSubject} from 'rxjs';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
+import { UserProfile } from 'app/models/user-profile';
 
 
 
@@ -15,16 +16,17 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
 
-  loginUrl: string = environment.baseUrl+"/login";
+  loginUrl: string = environment.baseUrl+"login";
   authSubject = new BehaviorSubject(false);// tracks the user's authorization state
   token: string | null | undefined;
   user: any;
   batchId: any;
-  httpOptions =  { headers : new HttpHeaders({"Content-Type":"application/x-www-form-urlencoded"})};
+  headers = new HttpHeaders({"Content-Type":"application/x-www-form-urlencoded"});
+  authHeaders = new HttpHeaders({"Authorization":sessionStorage.getItem("token") || ''})
   isLoggedIn: boolean = false;
   isTrainer: boolean = false;
   isAssigned: boolean = false;
-  registerUrl: string = environment.baseUrl+"employees";
+  registerUrl: string = environment.baseUrl+"register";
 
   constructor(private http: HttpClient, private router:Router) {
   }
@@ -49,13 +51,23 @@ export class AuthService {
     }
     return this.batchId;
   }
-attemptLogin(email: string, password: string ):Observable<LoginResponse>{
-  const payload = `email=${email}&password=${password}`
-  return this.http.post<LoginResponse>(this.loginUrl,payload, this.httpOptions);
-}
+  attemptLogin(email: string, password: string ):Observable<HttpResponse<LoginResponse>>{
+    const payload = `email=${email}&password=${password}`
+    return this.http.post<LoginResponse>(this.loginUrl,payload, {headers: this.headers, observe: 'response'});
+  }
 
-registerNewEmployee(name: string, email: string, password: string):Observable<UserRegistration>{
-  const payload = `name=${name}&email=${email}&password=${password}`
-  return this.http.post<UserRegistration>(this.registerUrl,payload,this.httpOptions);
-}
+  registerNewEmployee(name: string, email: string, password: string):Observable<UserRegistration>{
+    const payload = `name=${name}&email=${email}&password=${password}`
+    return this.http.post<any>(this.registerUrl,payload, {headers: this.headers});
+  }
+
+  getEmployeeProfile(empId: string, token:string): Observable<UserProfile>{
+    return this.http.get<UserProfile>(environment.baseUrl+'employees/'+empId, {headers: new HttpHeaders({"Authorization": token})});
+  }
+
+  getBatch(employeeId: string, token: string): Observable<any>{
+    return this.http.get<any>(environment.baseUrl+'batches/'+employeeId+'/batch', {headers:  new HttpHeaders({"Authorization": token})});
+  }
+
+
 }
