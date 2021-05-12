@@ -12,8 +12,6 @@ import { UserProfile } from 'app/models/user-profile';
 export class AssociateDataService {
 
   token: string = sessionStorage.getItem("token") || '';
-  emp: User = JSON.parse(sessionStorage.getItem("user")||'');
-  empID: number = this.emp.id;
   associateId : string = sessionStorage.getItem("userId") || '0';
 
   associatesUrl: string = environment.baseUrl+`/employees/${this.associateId}`;
@@ -43,12 +41,16 @@ export class AssociateDataService {
       );
   }
 
-  getEmployeeProfile(): Observable<UserProfile>{
-    return this.http.get<UserProfile>(this.associatesUrl, this.httpOptions);
+  getEmployeeProfile(): Observable<any>{
+    return this.http.get<any>(this.associatesUrl, this.httpOptions);
   }
 
   getBatchId(employeeId: string): Observable<any>{
     return this.http.get<any>(environment.baseUrl+'batches/'+employeeId+'/batch', this.httpOptions);
+  }
+
+  updateUserProfile(profile: UserProfile): Observable<any>{
+    return this.http.put<any>(environment.baseUrl+'employees/'+this.associateId, profile, this.httpOptions);
   }
 
 }

@@ -61,8 +61,8 @@ export class AuthService {
     return this.http.post<any>(this.registerUrl,payload, {headers: this.headers});
   }
 
-  getEmployeeProfile(empId: string, token:string): Observable<UserProfile>{
-    return this.http.get<UserProfile>(environment.baseUrl+'employees/'+empId, {headers: new HttpHeaders({"Authorization": token})});
+  getEmployeeProfile(empId: string, token:string): Observable<any>{
+    return this.http.get<any>(environment.baseUrl+'employees/'+empId, {headers: new HttpHeaders({"Authorization": token})});
   }
 
   getBatch(employeeId: string, token: string): Observable<any>{

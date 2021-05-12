@@ -17,14 +17,19 @@ export class ProfileComponent implements OnInit {
     console.log("persisting navbar state"); 
 
     associateData.getEmployeeProfile().subscribe((data)=>
-      this.userProfile=data, 
+      this.userProfile=new UserProfile(data.employee.id, data.employee.role, data.employee.name, data.employee.email, data.employee.phoneNumber, data.employee.address, data.employee.pictureUrl), 
       ()=>this.errorMessage="No User Profile",
-      ()=>console.log(this.userProfile)
+      ()=>console.log("profile retrieved successfully")
     );
     
   }
 
   ngOnInit(): void {
+  }
+
+  updateProfile(){
+    console.log("updating user profile");
+    this.associateData.updateUserProfile(this.userProfile).subscribe((res)=>console.log(res), (err)=>console.log(err), ()=>console.log('successful'));
   }
 
 

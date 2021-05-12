@@ -88,15 +88,15 @@
               <div class="form-group">
                   <label class="control-label">Update Picture URL</label>
                   <div>
-                    <input type="text" class="form-control" id="nameInput" name="name" placeholder="Full Name" value="{{userProfile.name}}" >
-                    <input type="text" class="form-control" id="emailInput" name="email" placeholder="@revature.net" value="{{userProfile.email}}" >
-                    <input type="text" class="form-control" id="phoneInput" name="phoneNumber" placeholder="(XXX)XXX-XXX" value="{{userProfile.phoneNumber}}" >
-                    <input type="text" class="form-control" id="addressInput" name="address" placeholder="Address" value="{{userProfile.address}}" >
-                    <input type="text" class="form-control" id="pictureInput" name="picture" placeholder="pictureUrl" value="{{userProfile.pictureUrl}}" >  
+                    <input type="text" class="form-control" id="nameInput" name="name" placeholder="Full Name" [(ngModel)]="userProfile.name" value="{{userProfile.name}}" >
+                    <input type="text" class="form-control" id="emailInput" name="email" placeholder="@revature.net" [(ngModel)]="userProfile.email" value="{{userProfile.email}}" >
+                    <input type="text" class="form-control" id="phoneInput" name="phoneNumber" placeholder="(XXX)XXX-XXX" [(ngModel)]="userProfile.phoneNumber" value="{{userProfile.phoneNumber}}" >
+                    <input type="text" class="form-control" id="addressInput" name="address" placeholder="Address" [(ngModel)]="userProfile.address" value="{{userProfile.address}}" >
+                    <input type="text" class="form-control" id="pictureInput" name="picture" placeholder="pictureUrl" [(ngModel)]="userProfile.pictureUrl" value="{{userProfile.pictureUrl}}" >  
                   </div>
               </div>
               <div class="modal-footer">
-              <button type="button" class="btn btn-primary" click="updateProfile()">Save changes</button>
+              <button type="button" class="btn btn-primary" (click)="updateProfile()">Save changes</button>
               </div>
           </div>
           </div>

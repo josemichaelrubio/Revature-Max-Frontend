@@ -51,40 +51,36 @@ export class LoginComponent implements OnInit {
 
       this.authService.getEmployeeProfile(this.empId, this.token).subscribe((data)=>{
         console.log(data);
-        this.user=new User(this.empId, data.email, data.name, data.role);
+        this.user=new User(this.empId, data.employee.email, data.employee.name, data.employee.role);
       }, 
         (err)=>this.message="error retrieving profile", 
         ()=>
         {
           console.log(this.user);
           sessionStorage.setItem("user", JSON.stringify(this.user));
+          console.log("user model retrieved and moving to find user's assigned batch");
+
+          this.authService.getBatch(this.empId, this.token).subscribe((data)=>{
+            console.log(data);
+            this.userBatchId = data;
+          }, (err)=>{
+            this.message="No batch assigned, redirecting to user profile";
+            this.router.navigateByUrl("associates");
+            console.log("changing navbar state");
+            this.nav.setNavbarState(true);
+          },
+          ()=>{
+            sessionStorage.setItem("userBatchId", this.userBatchId);
+            console.log("changing navbar state");
+            this.nav.setNavbarState(true);
+            if(this.user.role == "INSTRUCTOR"){
+              this.router.navigateByUrl("trainers");
+            }else{
+              this.router.navigateByUrl("batch");
+            }
+          });
         }
       );
-
-      console.log("user model retrieved and moving to find user's assigned batch");
-
-      this.authService.getBatch(this.empId, this.token).subscribe((data)=>{
-        console.log(data);
-        this.userBatchId = data;
-      }, (err)=>{
-        this.message="No batch assigned, redirecting to user profile";
-        this.router.navigateByUrl("associates");
-        console.log("changing navbar state");
-        this.nav.setNavbarState(true);
-      },
-      ()=>{
-        console.log("changing navbar state");
-        this.nav.setNavbarState(true);
-        if(this.response.userBatchId== null){
-          this.router.navigateByUrl("associates");
-        }
-        sessionStorage.setItem("userBatchId", this.userBatchId);
-        if(this.response.user.role == "INSTRUCTOR"){
-          this.router.navigateByUrl("trainers");
-        }else{
-          this.router.navigateByUrl("batch");
-        }
-      });
     });
 
   
