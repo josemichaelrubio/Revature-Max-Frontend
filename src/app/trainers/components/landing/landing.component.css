@@ -3,20 +3,24 @@ body,
 header,
 #intro {
 	height: 100%;
+
 }
 
-#intro {
-	background: url("../../../../simple_background.jpg")no-repeat center center fixed;
+
+ #intro {
+	background: url("../../../../simple_background.jpg");
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover;
-
+	width: 100%;
+	object-fit: cover;
+	
 }
 
 .wordart {
 	font-family: Arial, sans-serif;
-	font-size: 4em;
+	font-size: 4vw;
 	font-weight: bold;
 	position: relative;
 	z-index: 1;
@@ -64,6 +68,21 @@ header,
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
-	background-size: cover;
+	background-size: cover; 
 
+}
+
+.my-4{
+	padding-top: 5em;
+}
+#trainer-dash-btns{
+	margin-right: 10vw;
+	
+}
+.dash-btn{
+	width: 12vw;
+	min-width: 10em;
+	max-width: 15em;
+	height: 2.75em;
+	font-size: .75em;
 }
