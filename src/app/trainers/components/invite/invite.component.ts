@@ -52,31 +52,36 @@ export class InviteComponent implements OnInit {
   }
 
   onClickSubmit(){
-    // for(let email of this.emails){
-    //   //this.associates.push(new User(null, email, null, null))
-    // }
-
-
-    this.groupData.addAssociates(this.associates).subscribe((empsReturned)=>{
-      empsReturned.forEach((user1)=>this.rejectedUsers.push(user1.employee));
-      console.log("rejects: "+this.rejectedUsers)
-    },(err)=>this.errorMessage='Some employees are not verified yet. Verification emails were resent to unvereified employees!');
+    let addList=[];
    
-      for (let i = 0; i < this.rejectedUsers.length; i++) {
-        this.emails[i] = this.rejectedUsers[i].email;
-
-      }
-     // this.errorMessage='Some employees are not verified yet. Verification emails were resent to unvereified employees!'
+    for(let e of this.emails){
+      let t = {"email":e};      
+      addList.push(t);
+     
+    }
     
+    console.log(addList);
+    this.groupData.addAssociates(addList).subscribe((empsReturned)=>{
+      this.emails=[];
+      empsReturned.forEach((user1)=>this.emails.push(user1.employee));      
+      this.loaded=false;
+      if(this.emails.length>0){
+        this.errorMessage="Some employees are not verified yet. Verification emails were resent to unvereified employees!"
+      }
 
     this.associates=[];
-    this.loaded=false;
+
     this.groupData.getAllAssociates().subscribe((usersReturned)=> {
   		usersReturned.forEach((user)=>this.associates.push(user.employee));
-      this.loaded=true;
-		  
+      this.loaded=true;		  
   	},
     (err)=>{this.errorMessage = "Could not find any associates for your assigned batch!"});
+
+
+    },(err)=>this.errorMessage='Error when adding new Associates');     
+
+
+    
 
     // for(let email of this.emails){
     //   this.associates.push(new User(null, email, null, null))
@@ -105,6 +110,11 @@ export class InviteComponent implements OnInit {
 		  
   	},(err)=>{this.errorMessage = "Could not find any associates for your assigned batch!"})
     );
+  }
+  removeEmail(i:number){
+    
+    this.emails.splice(i,1);
+
   }
   
 

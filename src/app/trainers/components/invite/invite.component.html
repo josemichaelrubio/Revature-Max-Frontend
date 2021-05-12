@@ -50,7 +50,7 @@
     </form>
     <br>
     <ol class="list-group list-group-flush">
-        <li class="list-group-item" *ngFor="let e of emails">{{e}}</li>
+        <li class="list-group-item" *ngFor="let e of emails;let i = index">{{e}}<button class="btn btn-sm btn-close"  (click)="removeEmail(i)" style="color:red;"></button></li>
     </ol>
     <br>
     <button class="btn btn-lg btn-outline-dark" (click)="onClickSubmit()">Submit to Batch</button>
