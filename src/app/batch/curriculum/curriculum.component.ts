@@ -18,13 +18,18 @@ export class CurriculumComponent implements OnInit {
   formData!: FormGroup;
   day!: string;
   topicTitle!: string;
-  events = [{ id: '0', title: 'Start Date', date: '2021-03-01' }];
+  topicColor="#72a4c2";
+  quizColor="#f26925";
+  qcColor="#FCB414";
+  //events = [{ id: '0', title: 'Start Date', date: '2021-03-01' }];
+  events = [{ id: '0', title: 'Start Date', date: '2021-03-01', backgroundColor:'',borderColor:''}];
 
   constructor(
     private topicService: TopicService,
     private router: Router,
     private curriculumService: CurriculumService
   ) {
+    this.calendarOptions.buttonText={today:"Today"};
     curriculumService.getBatchDays().subscribe(
       (data) => {
         this.batchDays = data;
@@ -35,6 +40,8 @@ export class CurriculumComponent implements OnInit {
                 id: `${topic.id}`,
                 title: topic.name,
                 date: curDay.date,
+                backgroundColor:this.topicColor,
+                borderColor:this.topicColor
               });
             }
           }
@@ -45,6 +52,8 @@ export class CurriculumComponent implements OnInit {
               id: `${curDay.quiz.id}`,
               title: curDay.quiz.name,
               date: curDay.date,
+              backgroundColor:this.quizColor,
+              borderColor:this.quizColor
             });
           }
           if (curDay.qc) {
@@ -52,6 +61,8 @@ export class CurriculumComponent implements OnInit {
               id: `${curDay.qc.id}`,
               title: curDay.qc.name,
               date: curDay.date,
+              backgroundColor: this.qcColor,
+              borderColor: this.qcColor,
             });
           }
         }
