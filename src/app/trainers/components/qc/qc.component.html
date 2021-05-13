@@ -1,6 +1,7 @@
 <div class="main-div">
 	<div class="dropdown">
-		<h2>Instructor Feedback For QC</h2>
+		<!-- <h2>Instructor Feedback For QC</h2> -->
+        <h2 *ngIf="currentQC!=null">Instructor Feedback For {{currentQC.name}}</h2>
 		<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		Select QC
 		</button>
@@ -19,19 +20,27 @@
                 <th scope="col">Feedback</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody >
+            
+
+            
             <!--- Need to implement method qcFeedback on click--->
-            <tr *ngFor="let employee of associates">
+            <tr  *ngFor="let employee of associates">
+                <ng-container *ngIf="employee.qcScore!=null">
                 <td>{{employee.id}}</td>
                 <td>{{employee.email}}</td>
                 <td>{{employee.name}}</td>
-                <td><span>
+                
+                    <td>
+                    <span>
                 	<img class="emoji" src="assets/images/unknown-qc.jpg" [class.selected]="employee.qcScore === 0" (click)="setQCFeedback(employee.id, employee.qcId, 0)">
                 	<img class="emoji" src="assets/images/sad-qc.jpg" [class.selected]="employee.qcScore === 1" (click)="setQCFeedback(employee.id, employee.qcId, 1)">
                 	<img class="emoji" src="assets/images/meh-qc.jpg" [class.selected]="employee.qcScore === 2" (click)="setQCFeedback(employee.id, employee.qcId, 2)">
                 	<img class="emoji" src="assets/images/happy-qc.jpg" [class.selected]="employee.qcScore === 3" (click)="setQCFeedback(employee.id, employee.qcId, 3)">
                 	<img class="emoji" src="assets/images/star-qc.jpg" [class.selected]="employee.qcScore === 4" (click)="setQCFeedback(employee.id, employee.qcId, 4)"></span></td>
-            </tr>
+                  </ng-container>
+                </tr>
+            
         </tbody>
         
 

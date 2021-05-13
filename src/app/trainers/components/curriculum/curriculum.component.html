@@ -1,29 +1,28 @@
 <div class="cal">
+  <div class="button-group">
   <button class="btn btn-lg btn-outline-dark" (click)="toggleWeekends()">
     Toggle Weekends
   </button>
-  <a
+  <button
     class="btn btn-lg btn-outline-dark"
     data-toggle="modal"
     data-target="#exampleModalCenter"
-    >Add Event</a
-  >
-  <a
+    >Add Event</button>
+  <button
     class="btn btn-lg btn-outline-dark"
     data-toggle="modal"
     data-target="#removeModalCenter"
-    >Remove Event</a
-  >
-  <br />
-  <br />
+    >Remove Event</button >
+
   <div *ngIf="daysToUpdate.size != 0">
-    <a class="btn btn-lg btn-outline-danger" (click)="updateBackend()"
-      >Save Changes</a
-    >
+    <a class="btn btn-lg btn-outline-danger" (click)="updateBackend()">Save Changes</a>
   </div>
-  <br /><br />
+
+  </div>
+
+  
   <full-calendar id="calendar" [options]="calendarOptions"></full-calendar>
-  <br /><br />
+  
 </div>
 
 <!-- Modal -->
@@ -70,7 +69,7 @@
           <div class="form-group">
             <label class="control-label">Adding Topic to Curriculum</label>
             <h3>{{ day }}</h3>
-            <br />
+            
             <div>
               <select
                 (change)="loadTopics($event.target)"
@@ -107,7 +106,7 @@
           <div class="form-group">
             <label class="control-label">Adding Quiz to Curriculum</label>
             <h3>{{ day }}</h3>
-            <br />
+            
             <div>
               <select class="form-select" aria-label="Default select example">
                 <option selected>Choose Quiz</option>

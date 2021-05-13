@@ -41,8 +41,11 @@ export class CurriculumComponent implements OnInit {
   topicDateClick!: string;
   topicTagId!: string;
   typeOfAddition!: string;
+  topicColor="#72a4c2";
+  quizColor="#f26925";
+  qcColor="#FCB414";
 
-  events = [{ id: '0', title: 'Start Date', date: '2021-03-01', tech: '0' }];
+  events = [{ id: '0', title: 'Start Date', date: '2021-03-01', tech: '0' , backgroundColor:'',borderColor:''}];
 
   @ViewChild('content') private contentRef!: TemplateRef<Object>;
 
@@ -51,6 +54,7 @@ export class CurriculumComponent implements OnInit {
     private router: Router,
     private curriculumService: CurriculumService
   ) {
+    this.calendarOptions.buttonText={today:"Today"};
     curriculumService.getBatchDays().subscribe(
       (data) => {
         this.batchDays = data;
@@ -64,6 +68,8 @@ export class CurriculumComponent implements OnInit {
                 title: topic.name,
                 date: curDay.date,
                 tech: `${topic.tech.id}`,
+                backgroundColor:this.topicColor,
+                borderColor:this.topicColor
               });
             }
           }
@@ -74,23 +80,30 @@ export class CurriculumComponent implements OnInit {
               title: curDay.quiz.name,
               date: curDay.date,
               tech: 'quiz',
+              backgroundColor:this.quizColor,
+              borderColor:this.quizColor
             });
           }
           if (curDay.qc) {
+            
             this.events.push({
               id: `${curDay.qc.id}`,
               title: curDay.qc.name,
               date: curDay.date,
               tech: 'QC',
-            });
+              backgroundColor: this.qcColor,
+              borderColor: this.qcColor,
+            }
+            );
           }
         }
+
+        
         this.calendarOptions.events = this.events;
+
       },
       (err) => console.log(err),
       () => {
-        console.log('yay curriculum: ', this.batchDays);
-        console.log('yay events: ', this.events);
       }
     );
 
@@ -313,6 +326,8 @@ export class CurriculumComponent implements OnInit {
       title: topicToAdd.name,
       date: this.day,
       tech: `${topicToAdd.tech.id}`,
+      backgroundColor:this.topicColor,
+      borderColor:this.topicColor
     });
     this.events = newEvents;
     this.calendarOptions.events = newEvents;
@@ -370,12 +385,17 @@ export class CurriculumComponent implements OnInit {
       title: quizToAdd.name,
       date: this.day,
       tech: `quiz`,
+      backgroundColor:this.quizColor,
+      borderColor:this.quizColor
+ 
     });
     this.events.push({
       id: `${quizToAdd.id}`,
       title: quizToAdd.name,
       date: this.day,
       tech: `quiz`,
+      backgroundColor:this.quizColor,
+      borderColor:this.quizColor
     });
     this.calendarOptions.events = newEvents;
 
@@ -427,12 +447,16 @@ export class CurriculumComponent implements OnInit {
       title: qcToAdd.name,
       date: this.day,
       tech: `QC`,
+      backgroundColor: this.qcColor,
+      borderColor: this.qcColor,
     });
     this.events.push({
       id: `${qcToAdd.id}`,
       title: qcToAdd.name,
       date: this.day,
       tech: `QC`,
+      backgroundColor: this.qcColor,
+      borderColor: this.qcColor,
     });
     this.calendarOptions.events = newEvents;
 

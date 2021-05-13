@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top scrolling-navbar">
+<nav id="full-nav" class="navbar navbar-expand-lg navbar-dark fixed-top scrolling-navbar">
 
-    <div class="container">
+    <div class="container-fluid">
 
       <!-- Navbar brand -->
       <a class="navbar-brand" routerLink="/home">
@@ -31,10 +31,9 @@
             </ul>
             <!-- Links -->
         </div>
-
-        <div style='float: right;'>
-          <button routerLink="/login" class="btn btn-outline-light btn-round" *ngIf="!isLoggedIn">Log In</button>
-          <button class="btn btn-outline-light btn-round" (click)="logOut()" *ngIf="isLoggedIn">Log Out</button>
+        <div style='float: right; margin-right: 5vw;'>
+            <button routerLink="/login" class="btn btn-outline-light btn-round" *ngIf="!isLoggedIn">Log In</button>
+            <button class="btn btn-outline-light btn-round" (click)="logOut()" *ngIf="isLoggedIn">Log Out</button>
         </div>
 
 

@@ -9,26 +9,16 @@
                 <div class="row d-flex justify-content-center text-center">
         
                   <div class="col-md-10">
-        
-                    <br><br><br><br><br><br><br><br><br><br>
-                    <img src="https://3g4d13k75x47q7v53surz1gi-wpengine.netdna-ssl.com/wp-content/themes/revature/imgs/logo-white-color.png" alt="revature logo...">
-        
-                    <!-- Heading -->
-                    <div class="wordart horizon"><span class="text">MAX</span></div>
-                    <br><br>
-                    <hr class="hr-light" style="color:white;">
 
                     <!-- Description -->
                     <h4 class="my-4" style="color:white;">Trainer Dashboard</h4>
-                    <br>
-                    <a type="button" class="btn btn-outline-light" (click)='openDash()' *ngIf='!dashOpened' style="color:white;">Open Dashboard</a>
-                    <br><br>
-                    <div class="btn-group" role="group">
-                      <a type="button" class="btn btn-outline-light" routerLink='batch-data' *ngIf='dashOpened' style="color:white;">Batch Averages</a>
-                      <a type="button" class="btn btn-outline-light" routerLink='info' *ngIf='dashOpened' style="color:white;">Trainer Information</a>
-                      <a type="button" class="btn btn-outline-light" routerLink='curriculum' *ngIf='dashOpened' style="color:white;">Topics This Week</a>
-                      <a type="button" class="btn btn-outline-light" routerLink='batch-associates' *ngIf='dashOpened' style="color:white;">Batch Associates</a>
-                      <a type="button" class="btn btn-outline-light" routerLink='qc' *ngIf='dashOpened' style="color:white;">QC Feedback</a>
+                                      
+                    <div id = "trainer-dash-btns" class="btn-group" role="group">
+                      <a type="button"class="dash-btn btn btn-outline-light" routerLink='batch-data' >Batch Averages</a>
+                      <a type="button" class="dash-btn btn btn-outline-light" routerLink='info' >Trainer Information</a>
+                      <a type="button" class="dash-btn btn btn-outline-light" routerLink='curriculum' >Calendar</a>
+                      <a type="button" class="dash-btn btn btn-outline-light" routerLink='batch-associates' >Batch Associates</a>
+                      <a type="button" class="dash-btn btn btn-outline-light" routerLink='qc'>QC Feedback</a>
                     </div>
         
                   </div>
