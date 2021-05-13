@@ -24,7 +24,7 @@ export class QcComponent implements OnInit {
 
   	groupData.getAllAssociates().subscribe((usersReturned)=> {
   		usersReturned.forEach((user)=>this.associates.push(user.employee));
-		  this.qcSelected(1); 
+		  //this.qcSelected(1); 
   	},
     (err)=>{this.errorMessage = "Could not find any associates for your assigned batch!"});
 
