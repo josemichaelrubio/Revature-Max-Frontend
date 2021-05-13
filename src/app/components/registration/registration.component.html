@@ -1,22 +1,38 @@
 <main id ="intro">
 <div class="container">
-  <img class="mb-4 rev-logo" src="https://3g4d13k75x47q7v53surz1gi-wpengine.netdna-ssl.com/wp-content/themes/revature/imgs/logo-white-color.png" alt="Revautre Logo">
+  <br><br><br><br><br><br>
   <form class="form-signin" id="login-form">
 
-      <h1 class="h3 mb-3 font-weight-normal">Please Register an Account</h1>
+      <h2 class="h3 mb-3 font-weight-normal text-center" style="color: white;">Please Register an Account</h2>
+      <br>
 
-      <label for="inputName" class="sr-only">Full Name</label>
-      <input type="name" id="inputName" name="name" [(ngModel)]="name" class="form-control" placeholder="Name" required="" autofocus="">
+      <div class="form-floating mb-3">
+        <input type="text" id="inputName" name="email" [(ngModel)]="name" class="form-control" placeholder="your name" required autofocus="">
+        <label for="inputName">Full Name</label>
+        <div class="invalid-feedback">
+          Please Enter a Name
+        </div>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="email" id="inputEmail" name="email" [(ngModel)]="email" class="form-control" placeholder="associate@revature.net" required autofocus="">
+        <label for="inputEmail">Email Address</label>
+        <div class="invalid-feedback">
+          Please Enter an Email
+        </div>
+      </div>
+      <div class="form-floating">
+        <input type="password" id="inputPassword" name="password" [(ngModel)]="password" class="form-control" placeholder="******" required>
+        <label for="inputPassword">Password</label>
+        <div class="invalid-feedback">
+          Please Enter a Password
+        </div>
+      </div>
+      <br>
 
-      <label for="inputEmail" class="sr-only">Email</label>
-      <input type="email" id="inputEmail" name="email" [(ngModel)]="email" class="form-control" placeholder="Email" required="" autofocus="">
-
-      <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="inputPassword" name="password" [(ngModel)]="password" class="form-control" placeholder="Password" required="">
-
-      <button class="btn btn-outline-light btn-lg btn-block" type="submit" (click)="newEmployee()" >Register</button> <!--eventBinding-->
+      <button class="btn btn-secondary btn-lg btn-block" type="submit" (click)="newEmployee()" >Register</button> <!--eventBinding-->
       <div *ngIf="message">{{message}}</div>
   </form>
+  <br><br><br><br><br><br>
 </div>
 
 </main>

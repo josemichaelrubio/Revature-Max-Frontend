@@ -1,4 +1,5 @@
 #basicExampleNav {
+  
     width: 60%;
     display: flex;
     justify-content:space-between;
@@ -7,7 +8,16 @@
     white-space: nowrap;
     margin: 0px auto;
 }
+#full-nav{
+ 
+  background: url("../../../simple_background.jpg")no-repeat 0% 6% fixed;
+  background-position:6%;
 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
 /* nav{
   background-color: white;
 } */

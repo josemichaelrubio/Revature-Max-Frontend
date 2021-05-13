@@ -12,7 +12,7 @@ const routes: Routes = [
   { path: 'associates', loadChildren: () => import('./associates/associates.module').then(m => m.AssociatesModule) },
   { path: 'batch', loadChildren: () => import('./batch/batch.module').then(m => m.BatchModule) },
   { path: 'login', loadChildren: () => import('./login/login.module').then(m => m.LoginModule) },
-  { path: 'topics', loadChildren: () => import('./topics/topics.module').then(m => m.TopicsModule) },
+  { path: 'topics/:id/:name', loadChildren: () => import('./topics/topics.module').then(m => m.TopicsModule) },
   { path: 'sidenav', loadChildren: () => import('./sidenav/sidenav.module').then(m => m.SidenavModule) }
 ];
 

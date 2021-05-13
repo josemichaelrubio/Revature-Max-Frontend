@@ -3,6 +3,7 @@ import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 import { BatchInfoAverages } from '../../../models/batch-info-averages';
 import { AverageService } from '../../../services/average.service';
+import { map, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-batch-data',
@@ -11,7 +12,7 @@ import { AverageService } from '../../../services/average.service';
 })
 export class BatchDataComponent implements OnInit {
 
-  averages!:BatchInfoAverages;
+  averages!:any;
 
   batchId: number =  +(sessionStorage.getItem("userBatchId") || 1);
 
@@ -20,9 +21,44 @@ export class BatchDataComponent implements OnInit {
 
   topicCompAvgDataSet: number[] = [];
   topicLabels: string[] = [];
+  countForQuiz: number[] =[];
+  countForTopics: number[] = [];
 
   constructor(private averageService:AverageService) {
-    averageService.getBatchInfo(this.batchId).subscribe((avg)=>{
+
+    this.averageService
+      .getBatchInfo(this.batchId)
+      .pipe(take(1))
+      .subscribe(
+        (response) => {
+          console.log(response);
+          this.averages = response;
+          let quizAvg = this.averages.quizAverage;
+          for (let quizId of Object.keys(quizAvg)) {
+            console.log(+(quizAvg[quizId][1]));
+            this.quizAvgDataSet.push(+(quizAvg[quizId][1]));
+            this.quizLabels.push(quizAvg[quizId][0] + ' (count: ' + quizAvg[quizId][2] + ')');
+             this.countForQuiz.push(+(quizAvg[quizId][2]));
+          }
+
+         // this.quizAvgDataSet.push(0, 100);
+
+          let topicCompAvg = this.averages.competencyAverage
+          for (let topicId of Object.keys(topicCompAvg)) {
+            this.topicCompAvgDataSet.push(+(topicCompAvg[topicId][1]));
+            this.topicLabels.push((topicCompAvg[topicId][0]) + ' (count: ' +
+                topicCompAvg[topicId][2] + ')');
+            this.countForTopics.push(+(topicCompAvg.competenciesCounted));
+          }
+
+          this.topicCompAvgDataSet.push(0, 5);
+        },
+        (error) => console.log('There is an error'),
+        () => console.log(this.averages)
+      );
+
+
+    /*averageService.getBatchInfo(this.batchId).subscribe((avg)=>{
       this.averages=avg;
       for(let quizAvg of this.averages.quizAverage){
         this.quizAvgDataSet.push(quizAvg.averageScore);
@@ -39,7 +75,7 @@ export class BatchDataComponent implements OnInit {
     }, 
       (err)=>console.log(err), 
       ()=>console.log(this.averages)
-    );
+    );*/
 
   }
 

@@ -38,3 +38,9 @@ h1{
 #intro{
   background: url('../../../simple_background.jpg');
 }
+
+button:hover{
+    background-color: #F26925;
+    color: white;
+}
+
