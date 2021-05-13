@@ -17,8 +17,8 @@ export class AverageService {
     headers: new HttpHeaders({"Authorization": sessionStorage.getItem("token") || ""})
   };
 
-  getBatchInfo(batchId: number): Observable<BatchInfoAverages>{
-  	return this.http.get<BatchInfoAverages>(environment.baseUrl+`batches/${batchId}`, this.httpOptions);
+  getBatchInfo(batchId: number): Observable<any>{
+  	return this.http.get<any>(environment.baseUrl + `batches/${batchId}`, this.httpOptions);
 
   }
 }

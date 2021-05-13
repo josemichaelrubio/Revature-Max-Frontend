@@ -73,8 +73,15 @@ export class QcComponent implements OnInit {
 
    setQCFeedback(employeeId: number, qcId: number, instructorFeedback: number) {
    	this.groupData.setQCFeedbackForEmployee(employeeId, qcId, instructorFeedback).subscribe(
-   		() => console.log("QC Feedback successfully added"),
+   		(response) => {
+         this.associates.forEach((associate) => {
+           if (associate.id == employeeId) {
+             associate.qcScore = instructorFeedback;
+           }
+         })
+       },
    		() => console.log("Please navigate to the desired qc using the drop down menu"),
+     
 
    		);
 

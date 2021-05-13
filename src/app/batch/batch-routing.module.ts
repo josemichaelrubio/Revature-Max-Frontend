@@ -12,11 +12,9 @@ const routes: Routes = [
 		children: [
 			{ path: 'averages', component: AveragesComponent },
 			{ path: 'curriculum', component: CurriculumComponent },
-			{ path: 'associates', component: AssociatesComponent,
-			children: [
-				{ path: 'competencies', component: CompetenciesComponent}
-			]
-		}
+			{ path: 'competencies', component: CompetenciesComponent}
+			
+		
 		]
 	 } 
 ];

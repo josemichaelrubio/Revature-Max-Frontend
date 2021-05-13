@@ -14,14 +14,17 @@ export class GroupDataService {
   token: string = sessionStorage.getItem("token") || '';
 
   batchUrl: string = environment.baseUrl+`/batches/${this.batchId}`;
-  batchAssociatesUrl: string = "http://40.76.1.66:8083"+`/batches/${this.batchId}/associates`;
+  batchAssociatesUrl: string = environment.baseUrl+`/batches/${this.batchId}/associates`;
 
   testBatchUrl: string = "http://localhost:80/batches/1/associates";
 
   constructor(private http: HttpClient) { }
 
   getAllAssociates(): Observable<any[]>{
-    return this.http.get<any[]>(`http://localhost:8083/batches/${this.batchId}/associates`);
+    const httpOptions = {
+    headers: new HttpHeaders({"Authorization": this.token, "Content-Type":"application/json"})
+  };
+    return this.http.get<any[]>(environment.baseUrl + `/batches/${this.batchId}/associates`, httpOptions);
   }
 
 
@@ -42,7 +45,7 @@ export class GroupDataService {
   setQCFeedbackForEmployee(employeeId: number, qcId: number, instructorFeedback: number) : Observable<any> {
     const payload = `instructor-feedback=${instructorFeedback}`
     const httpOptions = {headers: new HttpHeaders({"Authorization": this.token, "Content-Type":"application/x-www-form-urlencoded"})};
-    return this.http.put(`http://localhost:8082/employees/${employeeId}/qcs/${qcId}/instructor-feedback`, payload, httpOptions)
+    return this.http.put(environment.baseUrl + `employees/${employeeId}/qcs/${qcId}/instructor-feedback`, payload, httpOptions)
 
   }
 
@@ -51,7 +54,7 @@ export class GroupDataService {
     const httpOptions = {
     headers: new HttpHeaders({"Authorization": this.token})
   };
-    return this.http.get<any[]>("http://localhost:8085/curriculum/qcs", httpOptions);
+    return this.http.get<any[]>(environment.baseUrl + "/curriculum/qcs", httpOptions);
   }
 
 
@@ -60,7 +63,7 @@ export class GroupDataService {
     headers: new HttpHeaders({"Authorization": this.token})
   };
 
-  return this.http.get<any[]>(`http://localhost:8082/employees?id=${employeeIds.toString()}&field=qc-feedbacks`, httpOptions);
+  return this.http.get<any[]>(environment.baseUrl + `/employees?id=${employeeIds.toString()}&field=qc-feedbacks`, httpOptions);
   }
 
 
