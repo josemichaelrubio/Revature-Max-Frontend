@@ -1,1 +1,39 @@
 p {color:black;}
+
+.dropdown {
+	margin-top: 50px;
+	margin-bottom: 100px;
+}
+
+ul {
+
+	display: flex;
+	justify-content: space-around;
+	padding: 0;
+	margin-bottom: 5rem;
+	
+
+}
+
+li  {
+	list-style: none;
+	padding: 10px;
+	transition: all 0.2s ease;
+}
+
+li:hover {
+	box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+	transform: scale(1.05);
+
+}
+
+
+hr {
+	margin: 5rem 5rem;
+
+}
+
+
+h2 {
+	margin-bottom: 3rem;
+}

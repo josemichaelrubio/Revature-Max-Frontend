@@ -1,79 +1,68 @@
-
 <app-associate-landing></app-associate-landing>
 <div class="main-div">
 <br>
-	<div id="intro" class="view">
-    <div class="container">
-      <div class="main-body">
-
-            <div class="row gutters-sm">
-              <div class="col-md-4 mb-3">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="d-flex flex-column align-items-center text-center">
-                      <div class="mt-3">
-                        <h4>{{name}}</h4>
-                        <p class="text-secondary mb-1">{{role | titlecase}}</p>
-                          <br>
-                        <!-- <button class="btn btn-outline-primary">Message</button> -->
-                        <br>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-8">
-                <div class="card mb-3">
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col-sm-3">
-                        <h6 class="mb-0">Full Name</h6>
-                      </div>
-                      <div class="col-sm-9 text-secondary">
-                        {{name}}
-                      </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                      <div class="col-sm-3">
-                        <h6 class="mb-0">Email</h6>
-                      </div>
-                      <div class="col-sm-9 text-secondary">
-                        {{email}}
-                      </div>
-                    </div>
-
-                    <!--Goal here is to databind batch name, thus, add batch info to session storage -->
-
-                    <!-- <div class="row">
-                      <div class="col-sm-3">
-                        <h6 class="mb-0">Current Batch</h6>
-                      </div>
-                      <div class="col-sm-9 text-secondary">
-                          {{batch}}
-                      </div>
-                    </div>
-                    <hr> -->
-
-                  </div>
+<div id="intro" class="view">
+  <div class="container">
+    <div class="main-body">
+      <div class="row gutters-sm">
+        <div class="col-md-4 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex flex-column align-items-center text-center">
+                <div class="mt-3">
+                  <h4>{{name}}</h4>
+                  <p class="text-secondary mb-1">{{role | titlecase}}</p>
+                  <br>
+                  <!-- <button class="btn btn-outline-primary">Message</button> -->
+                  <br>
                 </div>
               </div>
             </div>
-
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="card mb-3">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-3">
+                  <h6 class="mb-0">Full Name</h6>
+                </div>
+                <div class="col-sm-9 text-secondary">
+                  {{name}}
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <h6 class="mb-0">Email</h6>
+                </div>
+                <div class="col-sm-9 text-secondary">
+                  {{email}}
+                </div>
+              </div>
+              <!--Goal here is to databind batch name, thus, add batch info to session storage -->
+              <!-- <div class="row">
+                <div class="col-sm-3">
+                  <h6 class="mb-0">Current Batch</h6>
+                </div>
+                <div class="col-sm-9 text-secondary">
+                  {{batch}}
+                </div>
+              </div>
+              <hr> -->
+            </div>
+          </div>
+        </div>
       </div>
-
-
-
-
-
-		<div class="mask rgba-black-strong">
-			<div class="container align-items-center">
-				<a type="button" class="btn btn-outline-dark" routerLink='competencies'>Show Personal Competencies</a>
-				<br><br>
-				<router-outlet></router-outlet>
-
-				<br><br>
-			</div>
-		</div>
-	</div>
+    </div>
+  </div>
 </div>
+<div class="mask rgba-black-strong">
+  <div class="container align-items-center">
+    <a type="button" class="btn btn-outline-dark" routerLink='competencies'>Show Personal Competencies</a>
+    <br><br>
+    <router-outlet></router-outlet>
+    <br><br>
+  </div>
+</div>
+

@@ -1,31 +1,46 @@
 <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Add Quiz Score
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" *ngFor='let associateQuiz of associateQuizzes' data-toggle="modal" data-target="#exampleModalCenter" (click) = setQuizId(associateQuiz.quiz.id)>{{associateQuiz.quiz.name}}</a>
+  <div class="qcFeedback">
+    <h2>QC Feedback</h2>
+    <ul>
+      <li *ngFor="let qc of qcFeedbacks"><h5>{{qc.name}}</h5>
+        <img src="assets/images/unknown-qc.jpg" *ngIf="qc.instructorFeedback === 0">
+        <img src="assets/images/sad-qc.jpg" *ngIf="qc.instructorFeedback === 1">
+        <img src="assets/images/meh-qc.jpg" *ngIf="qc.instructorFeedback === 2">
+        <img src="assets/images/happy-qc.jpg" *ngIf="qc.instructorFeedback === 3">
+        <img src="assets/images/star-qc.jpg" *ngIf="qc.instructorFeedback === 4">
+      </li>
+    </ul>
   </div>
-</div>
-<br><br>
-<div class="chart-wrapper">
+  <hr>
+  <h2>Technology Competencies</h2>
+  <div class="chart-wrapper">
     <canvas baseChart
     [datasets]="radarChartData"
     [options]="radarChartOptions"
     [labels]="radarChartLabels"
     [chartType]="radarChartType">
-  </canvas>
+    </canvas>
+  </div>
+  <br><br>
+  <hr>
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  Add Quiz Score
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" *ngFor='let associateQuiz of associateQuizzes' data-toggle="modal" data-target="#exampleModalCenter" (click)="setQuizId(associateQuiz.id.quizId)">{{associateQuiz.name}}</a>
+  </div>
 </div>
 <br><br>
 <div class="chart-wrapper">
-    <canvas baseChart 
-        [datasets]="lineChartData" 
-        [labels]="lineChartLabels" 
-        [options]="lineChartOptions"
-        [colors]="lineChartColors" 
-        [legend]="lineChartLegend" 
-        [chartType]="lineChartType" 
-        [plugins]="lineChartPlugins">
-    </canvas>
+  <canvas baseChart
+  [datasets]="lineChartData"
+  [labels]="lineChartLabels"
+  [options]="lineChartOptions"
+  [colors]="lineChartColors"
+  [legend]="lineChartLegend"
+  [chartType]="lineChartType"
+  [plugins]="lineChartPlugins">
+  </canvas>
 </div>
 <!-- Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -34,20 +49,20 @@
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+        <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <div class="form-group">
-            <label class="control-label">Quiz Score</label>
-            <div>
-                <input type="number" class="form-control input-lg" id="score" [(ngModel)]="score" step=".2" min="0" max="100" name="quizScore" placeholder="Score">
-            </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" (click) = "setScore(score)">Save changes</button>
+          <label class="control-label">Quiz Score</label>
+          <div>
+            <input type="number" class="form-control input-lg" id="score" [(ngModel)]="score" step=".2" min="0" max="100" name="quizScore" placeholder="Score">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" (click) = "setScore(score)">Save changes</button>
+        </div>
       </div>
     </div>
   </div>
-</div>

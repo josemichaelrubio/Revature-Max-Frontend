@@ -18,11 +18,12 @@ import { Color, Label } from 'ng2-charts';
   styleUrls: ['./competencies.component.css'],
 })
 export class CompetenciesComponent implements OnInit {
-  employeeInfo!: EmployeeInfo;
-  associateQuizzes: AssociateQuiz[] = [];
-  tagCompAvg: any = [];
-  tagCompetencies: any = {};
-  tagNames: string[] = [];
+  employeeInfo!: any;
+  associateQuizzes: any[] = [];
+  techCompAvg: any = [];
+  techCompetencies: any = {};
+  techNames: string[] = [];
+  qcFeedbacks: any[] = [];
 
   associateQuizScoresDataSet: number[] = [];
   quizNames: string[] = [];
@@ -31,7 +32,7 @@ export class CompetenciesComponent implements OnInit {
     this.associateDataService.getEmployeeInfo().subscribe(
       (response: EmployeeInfo) => {
         this.employeeInfo = response;
-        this.associateQuizzes = this.employeeInfo.quizzes;
+        this.associateQuizzes = this.employeeInfo.quizScores;
       },
       (error) => console.log('Error occured'),
       () => {
@@ -47,39 +48,41 @@ export class CompetenciesComponent implements OnInit {
         (response: EmployeeInfo) => {
           console.log(response);
           this.employeeInfo = response;
-          for (let empQuiz of this.employeeInfo.quizzes) {
-            this.quizNames.push(empQuiz.quiz.name);
+          this.qcFeedbacks = this.employeeInfo.qcFeedbacks;
+
+          for (let empQuiz of this.employeeInfo.quizScores) {
+            this.quizNames.push(empQuiz.name);
             this.associateQuizScoresDataSet.push(empQuiz.score);
           }
 
           //.associateQuizScoresDataSet.push(50, 100);
 
-          for (let empTopic of this.employeeInfo.topics) {
-            if (!(empTopic.topic.tech.name in this.tagCompetencies)) {
-              this.tagCompetencies[empTopic.topic.tech.name] = [];
-              this.tagCompetencies[empTopic.topic.tech.name].push(
+          for (let empTopic of this.employeeInfo.topicCompetencies) {
+            if (!(empTopic.techName in this.techCompetencies)) {
+              this.techCompetencies[empTopic.techName] = [];
+              this.techCompetencies[empTopic.techName].push(
                 empTopic.competency
               );
             } else {
-              this.tagCompetencies[empTopic.topic.tech.name].push(
+              this.techCompetencies[empTopic.techName].push(
                 empTopic.competency
               );
             }
           }
 
-          for (let tagName in this.tagCompetencies) {
-            this.tagNames.push(tagName);
-            let length = this.tagCompetencies[tagName].length;
+          for (let technologyName in this.techCompetencies) {
+            this.techNames.push(technologyName);
+            let length = this.techCompetencies[technologyName].length;
             let sum = 0;
             for (let i = 0; i < length; i++) {
-              sum += this.tagCompetencies[tagName][i];
+              sum += this.techCompetencies[technologyName][i];
             }
             let average = (sum / length).toPrecision(2);
             console.log(average);
-            this.tagCompAvg.push(average);
+            this.techCompAvg.push(average);
           }
 
-          console.log(this.tagCompAvg);
+          console.log(this.techCompAvg);
         },
 
         (error) => console.log(error),
@@ -95,7 +98,7 @@ export class CompetenciesComponent implements OnInit {
     console.log(this.quizId);
   }
 
-  score!: number;
+  score: number = 0;
   setScore(score: number) {
     this.score = score;
     console.log(this.score);
@@ -103,20 +106,31 @@ export class CompetenciesComponent implements OnInit {
     this.associateDataService.setEmployeeQuiz(JSON.stringify(o), this.quizId);
   }
 
+
   radarChartOptions: RadialChartOptions = {
+      legend: {
+        labels: {
+            fontSize: 16
+        }
+    },
     responsive: true,
     scale: {
+      pointLabels: {
+        fontSize: 16
+      },
       ticks: {
         min: 0,
         max: 5,
+        stepSize: 1,
+        fontSize: 16
       },
     },
   };
-  radarChartLabels: Label[] = this.tagNames;
+  radarChartLabels: Label[] = this.techNames;
 
   radarChartData: ChartDataSets[] = [
     {
-      data: this.tagCompAvg,
+      data: this.techCompAvg,
       label: 'Associate Topic Competency Analysis',
       backgroundColor: 'rgba(248, 148, 6, 0.2)',
       borderColor: 'rgba(248, 148, 6, 1)',
@@ -133,6 +147,24 @@ export class CompetenciesComponent implements OnInit {
 
   lineChartOptions = {
     responsive: true,
+    legend: {
+        labels: {
+            fontSize: 16
+        }
+    },
+    scales: {
+      xAxes: [{
+        ticks: {
+          fontSize: 16
+        }
+      }],
+      yAxes: [{
+        ticks: {
+          fontSize: 16
+        }
+      }]
+      
+    }
   };
 
   lineChartColors: Color[] = [
