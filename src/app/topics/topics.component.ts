@@ -1,6 +1,6 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit} from '@angular/core';
 import { take, filter } from 'rxjs/operators';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { TopicService } from '../services/topic.service';
 import { Topic } from '../models/topic';
 import { Notes } from '../models/notes';
@@ -16,31 +16,37 @@ export class TopicsComponent implements OnInit {
   userId = JSON.parse(sessionStorage.getItem("user")!).id;
   userName = JSON.parse(sessionStorage.getItem("user")!).name;
 
-  topic!: Topic;
+  topic: string = "";
   competency: number = 0;
   starredNotes: Notes | null = null;
   notes = new Array<Notes>();
   isEditing : boolean = false;
   selfNotes : Notes = {
-    notesId: null,
+    id: null,
     employee: {id: 0, name: ""},
-    timesStarred: 0,
+    votes: 0,
     content: ""
   };
 
-  constructor(private router: Router, private topicService: TopicService, private nav: NavChangeService) {
-    console.log("persisting navbar state");
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: any) => {
-      if (event.url == '/topics') {
-        this.ngOnInit();
-      }
-    });
+
+  constructor(private router : ActivatedRoute, private topicService: TopicService) {
+    // this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: any) => {
+    //   if (event.url == '/topics') {
+    //     this.ngOnInit();
+    //   }
+    // });
+    this.router.params.subscribe(params => {
+      topicService.selectedTopicId.next(+params['id'])
+      topicService.selectedTopicName.next(params["name"])
+    })
+    // if(topicService.selectedTopicId.getValue() == 0) {
+    //   router.navigate(['/batch/curriculum'])
+    // }
   }
 
   ngOnInit(): void {
     this.topicService.getTopicDTO().subscribe(
-      (res) => { 
-        this.topic = res.topic;
+      (res) => {
         this.competency = res.competency || 0;
         var notes = res.notes;
 
@@ -48,21 +54,26 @@ export class TopicsComponent implements OnInit {
         if(selfIdx != -1)
           this.selfNotes = notes.splice(selfIdx, 1)[0];
         
-        if(res.starredNotesId != null) {
-          var starredNotesIdx = notes.findIndex(e => e.notesId == res.starredNotesId)
-          if(starredNotesIdx != -1)
-            this.starredNotes = notes.splice(starredNotesIdx, 1)[0];
+        if(res.fav_notes_id != null) {
+          var starredidx = notes.findIndex(e => e.id == res.fav_notes_id)
+          if(starredidx != -1)
+            this.starredNotes = notes.splice(starredidx, 1)[0];
         }
-        this.notes = res.notes;
+        this.notes = res.notes.sort((a,b) => b.votes - a.votes);
       }, (err) => {
         console.log(err);
       }
     );
+
+    this.topicService.selectedTopicName.asObservable()
+    .subscribe((val) => {
+      this.topic = val;
+    })
   }
 
   updateCompetency(): void {
     console.log("Updating competency")
-    let employeeTopic = { competency: this.competency, favNotes: this.starredNotes ? this.starredNotes.notesId : null };
+    let employeeTopic = { competency: this.competency, favNotes: this.starredNotes ? this.starredNotes.id : null };
     this.topicService.setEmployeeTopic(JSON.stringify(employeeTopic)).subscribe(
       (res) => {},
       (err) => {
@@ -71,18 +82,21 @@ export class TopicsComponent implements OnInit {
     );
   }
 
-  updateStarredNotes(notesSelected: Notes): void {
-    let employeeTopic = { competency: this.competency, favNotes: this.starredNotes ? this.starredNotes.notesId : null };
+  updateStarredNotes(notesSelected: Notes | null): void {
+    let employeeTopic = { competency: this.competency, favNotes: notesSelected ? notesSelected.id : null };
     this.topicService.setEmployeeTopic(JSON.stringify(employeeTopic)).subscribe(
       (res) => {
+        if(this.starredNotes) {
+          this.starredNotes.votes--;
+          this.notes.push(this.starredNotes!);
+          this.notes = this.notes.sort((a,b) => b.votes - a.votes);
+        }
         if(notesSelected) {
-          if(this.starredNotes) {
-            this.starredNotes.timesStarred--;
-          }
-          notesSelected.timesStarred++;
+          notesSelected.votes++;
           this.starredNotes = notesSelected;
+          var starredidx = this.notes.findIndex(e => e.id == this.starredNotes!.id)
+          this.starredNotes = this.notes.splice(starredidx, 1)[0];
         } else {
-          this.starredNotes!.timesStarred--;
           this.starredNotes = null;
         }
       }, (err) => {
@@ -92,16 +106,15 @@ export class TopicsComponent implements OnInit {
   }
 
   updateNotes(): void {
-    let o = { "id": this.selfNotes.notesId ? this.selfNotes.notesId : null, "topic": { "id": this.topicService.selectedTopicId }, "notes": this.selfNotes.content };
+
+    var text = (<HTMLTextAreaElement>document.getElementById("selfNotes-content")).value;
+    let o = { id: this.selfNotes.id ? this.selfNotes.id : null, topicId:this.topicService.selectedTopicId.getValue() , content: text };
+    console.log(o);
     this.topicService.setNotes(JSON.stringify(o)).subscribe(
       (res) => {
-        if (!this.selfNotes.notesId) {
-          if (!res) {
-            this.selfNotes.notesId = null;
-          } else {
-            this.selfNotes.notesId = res;
-          }
-        }
+        this.isEditing = false;
+        this.selfNotes.content = text;
+        this.selfNotes.id = +res;
       }, (err) => {
         console.log(err);
       }
@@ -111,5 +124,4 @@ export class TopicsComponent implements OnInit {
   trackByIndex(index: number, obj: any): any {
     return index;
   }
-
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { TopicDTO } from '../models/topic-dto';
 import { environment } from '../../environments/environment';
 import { Topic } from 'app/models/topic';
@@ -10,18 +10,20 @@ import { Tech } from 'app/models/tech';
   providedIn: 'root',
 })
 export class TopicService {
-  selectedTopicId: number = 0;
-
+  selectedTopicId = new BehaviorSubject(0);
+  selectedTopicName = new BehaviorSubject<string>("Topic Name");
+  
   constructor(private http: HttpClient) {}
 
   getTopicDTO(): Observable<TopicDTO> {
     let batchId = sessionStorage.getItem('userBatchId');
+    let userId = JSON.parse(sessionStorage.getItem("user")!).id;
     let headers = new HttpHeaders({
       Authorization: sessionStorage.getItem('token') || '',
     });
     return this.http.get<TopicDTO>(
       environment.baseUrl +
-        `/batches/${batchId}/topics/${this.selectedTopicId}`,
+        `employees/notes/${this.selectedTopicId.getValue()}?employee=${userId}`,
       { headers: headers }
     );
   }
@@ -34,7 +36,7 @@ export class TopicService {
     });
     return this.http.put(
       environment.baseUrl +
-        `/employees/${user.id}/topics/${this.selectedTopicId}`,
+        `employees/${user.id}/topics/${this.selectedTopicId.getValue()}`,
       employeeTopic,
       { headers: headers }
     );
@@ -47,7 +49,7 @@ export class TopicService {
       'Content-Type': 'application/json',
     });
     return this.http.put(
-      environment.baseUrl + `/employees/${user.id}/notes`,
+      environment.baseUrl + `employees/${user.id}/notes`,
       notes,
       { headers: headers }
     );

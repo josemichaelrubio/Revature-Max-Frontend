@@ -101,12 +101,13 @@ export class CurriculumComponent implements OnInit {
 
   handleEventClick(arg: any) {
     console.log(arg);
-    this.topicService.selectedTopicId = +arg.event._def.publicId;
-    this.router.navigateByUrl('/topics');
+    this.topicService.selectedTopicId.next(+arg.event._def.publicId);
+    this.topicService.selectedTopicName.next(arg.event._def.title);
+    this.router.navigate(['/topics', +arg.event._def.publicId, arg.event._def.title]);
   }
 
   checkTopicOne() {
-    this.topicService.selectedTopicId = 1;
+    this.topicService.selectedTopicId.next(1);
     this.router.navigateByUrl('/topics');
   }
 }
