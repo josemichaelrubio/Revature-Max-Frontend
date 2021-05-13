@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NavChangeService } from 'app/services/nav-change.service';
 
 @Component({
   selector: 'app-batch',
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BatchComponent implements OnInit {
 
-  constructor() { }
+  constructor(private nav: NavChangeService) {
+    console.log("persisting navbar state");
+   }
 
   ngOnInit(): void {
   }

@@ -4,7 +4,11 @@
 
       <!-- Navbar brand -->
       <a class="navbar-brand" routerLink="/home">
-        <img src='https://cdn.discordapp.com/attachments/829497330021302322/834067085109231626/revature-max-logo-removebg-preview.png' alt="Revature" style="height: 60px; width: 150px;"></a>
+        <span class="fa fa-home">Home</span>
+      </a>
+      <a class="navbar-brand" routerLink="/associates" *ngIf="isLoggedIn">
+        <span class="fa fa-user">Profile</span>
+      </a>
 
       <!-- Collapse button -->
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
@@ -18,9 +22,6 @@
             <!-- Links -->
             <ul class="navbar-nav mr-auto smooth-scroll" style="float: left;">
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/associates" *ngIf="isLoggedIn && !isTrainer">Associate</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" routerLink="/trainers" *ngIf="isTrainer">Trainer</a>
                 </li>
                 <li class="nav-item">
@@ -30,9 +31,10 @@
             </ul>
             <!-- Links -->
         </div>
+
         <div style='float: right;'>
-            <button routerLink="/login" class="btn btn-outline-light btn-round" *ngIf="!isLoggedIn">Log In</button>
-            <button class="btn btn-outline-light btn-round" (click)="logOut()" *ngIf="isLoggedIn">Log Out</button>
+          <button routerLink="/login" class="btn btn-outline-light btn-round" *ngIf="!isLoggedIn">Log In</button>
+          <button class="btn btn-outline-light btn-round" (click)="logOut()" *ngIf="isLoggedIn">Log Out</button>
         </div>
 
 
